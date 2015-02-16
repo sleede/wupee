@@ -1,0 +1,11 @@
+Description:
+    Add a notification by name
+
+Example:
+    rails generate notification name
+
+    This will create or modify:
+      insert  app/models/notification_type.rb
+      create  app/views/notifications_mailer/name.html.erb
+      insert  app/mailers/notifications_mailer.rb
+      insert  config/locales/en.yml
