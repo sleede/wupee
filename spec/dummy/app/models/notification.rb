@@ -1,2 +1,3 @@
-class Notification < NotifyWith::Notification
+class Notification < ActiveRecord::Base
+  include NotifyWith::Notification
 end

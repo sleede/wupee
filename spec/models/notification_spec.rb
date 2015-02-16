@@ -5,7 +5,7 @@ RSpec.describe Notification, type: :model do
   let!(:receiver) { create :user }
   let!(:notification_type) { 'notify_new_message' }
 
-  context 'method "send_notification"' do
+  context 'method #send_notification' do
     it 'should can set a notification type' do
       notification = Notification.new.send_notification(type: notification_type)
       expect(notification.notification_type).to eq notification_type
@@ -17,7 +17,7 @@ RSpec.describe Notification, type: :model do
     end
   end
 
-  context 'method "to"' do
+  context 'method #to' do
     it 'should can set a receiver' do
       notification = Notification.new.to(receiver)
       expect(notification.receiver).to eq receiver

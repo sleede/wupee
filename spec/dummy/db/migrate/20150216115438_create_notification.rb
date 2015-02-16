@@ -1,6 +1,6 @@
-class CreateNotifyWithNotifications < ActiveRecord::Migration
+class CreateNotification < ActiveRecord::Migration
   def change
-    create_table :notify_with_notifications do |t|
+    create_table :notifications do |t|
       t.references :receiver, polymorphic: true
       t.references :attached_object, polymorphic: true
       t.integer :notification_type_id

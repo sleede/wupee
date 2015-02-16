@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150213152846) do
+ActiveRecord::Schema.define(version: 20150216115438) do
 
   create_table "messages", force: :cascade do |t|
     t.string   "body"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20150213152846) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "notify_with_notifications", force: :cascade do |t|
+  create_table "notifications", force: :cascade do |t|
     t.integer  "receiver_id"
     t.string   "receiver_type"
     t.integer  "attached_object_id"
