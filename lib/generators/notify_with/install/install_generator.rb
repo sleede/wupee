@@ -27,6 +27,26 @@ class NotifyWith::InstallGenerator < Rails::Generators::Base
     template "notifications_mailer.rb", "app/mailers/notifications_mailer.rb"
   end
 
+  def copy_api_notifications_controller
+    template "notifications_controller.rb", "app/controllers/api/notifications_controller.rb"
+  end
+
+  def copy_api_notifications_views
+    template "index.json.jbuilder", "app/views/api/notifications/index.json.jbuilder"
+    template "show.json.jbuilder", "app/views/api/notifications/show.json.jbuilder"
+  end
+
+  def add_notifications_route
+    route \
+<<-CODE
+namespace :api, defaults: { format: :json } do
+    resources :notifications, only: [:index, :show, :update] do
+      match :update_all, path: '/', via: [:put, :patch], on: :collection
+    end
+  end
+CODE
+  end
+
   def copy_initializer
     template "notify_with.rb", "config/initializers/notify_with.rb"
   end

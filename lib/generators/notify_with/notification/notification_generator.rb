@@ -22,4 +22,12 @@ CODE
 CODE
     end
   end
+
+  def create_notification_json_template_file
+    create_file "app/views/api/notifications/_#{file_name}.json.jbuilder", <<-FILE
+json.title notification.notification_type
+json.description 'a notification description'
+json.url 'a url for redirect to attached_object'
+    FILE
+  end
 end
