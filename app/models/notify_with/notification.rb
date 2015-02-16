@@ -32,8 +32,12 @@ module NotifyWith
       update_columns(is_send: true)
     end
 
-    def deliver
-      save and NotifyWith.mailer.send_mail_by(self).deliver_later and true
+    def deliver_now
+      NotifyWith.mailer.send_mail_by(self).deliver_now if save
+    end
+
+    def deliver_later
+      NotifyWith.mailer.send_mail_by(self).deliver_later if save
     end
   end
 end

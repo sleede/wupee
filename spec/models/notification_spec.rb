@@ -55,9 +55,15 @@ RSpec.describe Notification, type: :model do
     expect(notification.is_read).to eq true
   end
 
-  it 'deliver' do
+  it '#deliver_now should send a mail' do
     notification = Notification.new.send_notification(type: notification_type, attached_object: message)
                                    .to(receiver)
-    expect(notification.deliver).to eq true
+    expect(notification.deliver_now).to be_a(Mail::Message)
+  end
+
+  it '#deliver_later should send later a mail' do
+    notification = Notification.new.send_notification(type: notification_type, attached_object: message)
+                                   .to(receiver)
+    expect(notification.deliver_later).to be_a(ActionMailer::DeliveryJob)
   end
 end
