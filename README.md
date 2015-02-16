@@ -14,7 +14,9 @@ Getting started:
 rails g notify_with:notification notify_new_message
 ```
 Edit app/views/notifications_mailer/notify_new_message.html.erb
+
 Edit config/locales/{locale}.yml
+
 Edit app/views/api/notifications/_notify_new_message.json.jbuilder
 
 To send:
