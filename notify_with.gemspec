@@ -9,12 +9,12 @@ Gem::Specification.new do |s|
   s.version     = NotifyWith::VERSION
   s.authors     = ["Peng DU"]
   s.email       = ["peng@sleede.com"]
-  s.homepage    = "http://sleede.com"
+  s.homepage    = "https://github.com/sleede/notfity_with"
   s.summary     = "A simple notification system for sleede rails project"
   s.description = "A simple notification system for sleede rails project"
   s.license     = "MIT"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "rails", ">= 4.2.0"
