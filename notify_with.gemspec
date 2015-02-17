@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = NotifyWith::VERSION
   s.authors     = ["Peng DU"]
   s.email       = ["peng@sleede.com"]
-  s.homepage    = "https://github.com/sleede/notfity_with"
+  s.homepage    = "https://github.com/sleede/notify_with"
   s.summary     = "A simple notification system for sleede rails project"
   s.description = "A simple notification system for sleede rails project"
   s.license     = "MIT"
