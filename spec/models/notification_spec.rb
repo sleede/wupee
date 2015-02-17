@@ -66,4 +66,21 @@ RSpec.describe Notification, type: :model do
                                    .to(receiver)
     expect(notification.deliver_later).to be_a(ActionMailer::DeliveryJob)
   end
+
+  describe 'receiver' do
+    it 'should can return his all notifications' do
+      notification = Notification.new.send_notification(type: notification_type, attached_object: message)
+                                     .to(receiver)
+      expect {notification.save}.to change{receiver.notifications.count}.from(0).to(1)
+    end
+  end
+
+  context 'when attached object is destroy' do
+    it 'all notifications with this object should destroy' do
+      notification = Notification.new.send_notification(type: notification_type, attached_object: message)
+                                     .to(receiver)
+      notification.save
+      expect {message.destroy}.to change{receiver.notifications.count}.from(1).to(0)
+    end
+  end
 end
