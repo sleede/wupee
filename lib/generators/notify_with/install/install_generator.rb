@@ -4,23 +4,15 @@ class NotifyWith::InstallGenerator < Rails::Generators::Base
 
   def self.next_migration_number path
     unless @prev_migration_nr
-    @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
+      @prev_migration_nr = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
     else
-    @prev_migration_nr += 1
+      @prev_migration_nr += 1
     end
     @prev_migration_nr.to_s
   end
 
   def copy_notification_migration
     migration_template "create_notification.rb", "db/migrate/create_notification.rb"
-  end
-
-  def copy_notification_model
-    template "notification.rb", "app/models/notification.rb"
-  end
-
-  def copy_notification_type_model
-    template "notification_type.rb", "app/models/notification_type.rb"
   end
 
   def copy_notifications_mailer
@@ -38,13 +30,13 @@ class NotifyWith::InstallGenerator < Rails::Generators::Base
 
   def add_notifications_route
     route \
-<<-CODE
-namespace :api, defaults: { format: :json } do
-    resources :notifications, only: [:index, :show, :update] do
-      match :update_all, path: '/', via: [:put, :patch], on: :collection
-    end
-  end
-CODE
+      <<-CODE
+      namespace :api, defaults: { format: :json } do
+          resources :notifications, only: [:index, :show, :update] do
+            match :update_all, path: '/', via: [:put, :patch], on: :collection
+          end
+        end
+      CODE
   end
 
   def copy_initializer
@@ -53,10 +45,10 @@ CODE
 
   def add_subject_locale
     append_file "config/locales/#{I18n.locale.to_s}.yml" do
-<<-CODE
-  notifications_mailer:
-    send_mail_by:
-CODE
+      <<-CODE
+        notifications_mailer:
+          send_mail_by:
+      CODE
     end
   end
 end
