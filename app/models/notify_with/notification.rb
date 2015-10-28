@@ -5,10 +5,7 @@ class NotifyWith::Notification < ActiveRecord::Base
   belongs_to :attached_object, polymorphic: true
   belongs_to :notification_type, class_name: "NotifyWith::NotificationType"
 
-  validates_presence_of :receiver_id,
-                        :receiver_type,
-                        :attached_object_id,
-                        :attached_object_type,
+  validates_presence_of :receiver,
                         :notification_type
 
   def send_notification(type: nil, attached_object: nil)
@@ -26,8 +23,8 @@ class NotifyWith::Notification < ActiveRecord::Base
     update_columns(is_read: true)
   end
 
-  def mark_as_send
-    update_columns(is_send: true)
+  def mark_as_sent
+    update_columns(is_sent: true)
   end
 
   def deliver_now

@@ -6,7 +6,7 @@ class CreateNotifications < ActiveRecord::Migration
       t.belongs_to :notification_type, foreign_key: true
       t.integer :notification_type_id
       t.boolean :is_read, default: false
-      t.boolean :is_send, default: false
+      t.boolean :is_sent, default: false
 
       t.timestamps null: false
     end

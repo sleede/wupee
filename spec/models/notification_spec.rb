@@ -6,6 +6,58 @@ RSpec.describe NotifyWith::Notification, type: :model do
   let!(:notification_type_name) { 'notify_new_message' }
   let!(:notification_type) { create :notification_type, name: notification_type_name }
 
+  context "validations" do
+    it "validates presence of receiver" do
+      notification = NotifyWith::Notification.new
+      notification.valid?
+      expect(notification.errors).to have_key :receiver
+    end
+
+    it "validates presence of notification_type" do
+      notification = NotifyWith::Notification.new
+      notification.valid?
+      expect(notification.errors).to have_key :notification_type
+    end
+  end
+
+  it 'should be able to be marked as read' do
+    notification = create :notification
+    notification.mark_as_read
+    expect(notification.is_read).to eq true
+  end
+
+  it 'should be able to be marked as sent' do
+    notification = create :notification
+    notification.mark_as_sent
+    expect(notification.is_sent).to eq true
+  end
+
+  context "default values" do
+    it { expect(create(:notification).is_read).to be false }
+    it { expect(create(:notification).is_sent).to be false }
+  end
+
+  # this test has to be moved to notification_attached_object spec
+  context 'when attached object is destroy' do
+    it 'has to destroy the notification' do
+
+      notification = create :notification
+      receiver = notification.receiver
+
+      expect { notification.attached_object.destroy }.to change{ receiver.notifications.count }.from(1).to(0)
+    end
+  end
+
+  # this test has to be moved to notification_receiver spec
+  describe 'receiver' do
+    it 'should can return his all notifications' do
+      notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
+                                     .to(receiver)
+      expect {notification.save}.to change{receiver.notifications.count}.from(0).to(1)
+    end
+  end
+
+  # those tests have to be rethink... or moved!
   context 'method #send_notification' do
     it 'should can set a notification type' do
       notification = build(:notification).send_notification(type: notification_type_name)
@@ -25,36 +77,6 @@ RSpec.describe NotifyWith::Notification, type: :model do
     end
   end
 
-  it 'should create success with receiver, notification_type and attached_object' do
-    notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
-                                   .to(receiver)
-    expect(notification.save).to eq true
-  end
-
-  it 'is invalid without notification_type' do
-    notification = NotifyWith::Notification.new
-    expect(notification).to be_invalid
-  end
-
-  it 'is invalid without attached_object' do
-    notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: nil)
-                                   .to(receiver)
-    expect(notification).to be_invalid
-  end
-
-  it 'is invalid without receivor' do
-    notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
-    expect(notification).to be_invalid
-  end
-
-  it 'should be able to be marked is read' do
-    notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
-                                   .to(receiver)
-    notification.save
-    notification.mark_as_read
-    expect(notification.is_read).to eq true
-  end
-
   it '#deliver_now should send a mail' do
     notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
                                    .to(receiver)
@@ -67,20 +89,6 @@ RSpec.describe NotifyWith::Notification, type: :model do
     expect(notification.deliver_later).to be_a(ActionMailer::DeliveryJob)
   end
 
-  describe 'receiver' do
-    it 'should can return his all notifications' do
-      notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
-                                     .to(receiver)
-      expect {notification.save}.to change{receiver.notifications.count}.from(0).to(1)
-    end
-  end
 
-  context 'when attached object is destroy' do
-    it 'all notifications with this object should destroy' do
-      notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
-                                     .to(receiver)
-      notification.save
-      expect {message.destroy}.to change{receiver.notifications.count}.from(1).to(0)
-    end
-  end
+
 end

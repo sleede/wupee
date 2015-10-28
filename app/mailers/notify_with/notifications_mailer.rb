@@ -8,6 +8,8 @@ module NotifyWith
       @attached_object = notification.attached_object
 
       if !respond_to?(notification.notification_type.name)
+        p '-------------------------------'
+        puts self.object_id
         class_eval %Q{
           def #{notification.notification_type.name}
             mail to: @recipient.email,
@@ -22,8 +24,8 @@ module NotifyWith
     end
 
     private
-    def mark_notification_as_send
-      @notification.mark_as_send unless @notification.is_send
-    end
+      def mark_notification_as_send
+        @notification.mark_as_sent unless @notification.is_sent
+      end
   end
 end

@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 20151028111239) do
     t.string   "attached_object_type"
     t.integer  "notification_type_id"
     t.boolean  "is_read",              default: false
-    t.boolean  "is_send",              default: false
+    t.boolean  "is_sent",              default: false
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
   end
