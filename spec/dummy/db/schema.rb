@@ -19,6 +19,18 @@ ActiveRecord::Schema.define(version: 20151028111239) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notification_type_configurations", force: :cascade do |t|
+    t.integer  "notification_type_id"
+    t.integer  "receiver_id"
+    t.string   "receiver_type"
+    t.integer  "value",                default: 0
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  add_index "notification_type_configurations", ["notification_type_id"], name: "index_notification_type_configurations_on_notification_type_id"
+  add_index "notification_type_configurations", ["receiver_type", "receiver_id"], name: "idx_notif_typ_config_on_receiver_type_and_receiver_id"
+
   create_table "notification_types", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -26,17 +38,6 @@ ActiveRecord::Schema.define(version: 20151028111239) do
   end
 
   add_index "notification_types", ["name"], name: "index_notification_types_on_name", unique: true
-
-  create_table "notification_types_receivers", force: :cascade do |t|
-    t.integer  "notification_type_id"
-    t.integer  "receiver_id"
-    t.string   "receiver_type"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-  end
-
-  add_index "notification_types_receivers", ["notification_type_id"], name: "index_notification_types_receivers_on_notification_type_id"
-  add_index "notification_types_receivers", ["receiver_type", "receiver_id"], name: "idx_notif_typ_receiv_on_receiver_type_and_receiver_id"
 
   create_table "notifications", force: :cascade do |t|
     t.integer  "receiver_id"
