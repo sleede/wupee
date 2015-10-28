@@ -1,17 +1,8 @@
-class NotifyWith::NotificationType
-  NAMES = []
+class NotifyWith::NotificationType < ActiveRecord::Base
+  self.table_name = 'notification_types'
 
-  def self.notification_type_names(names)
-    NAMES.concat names
-  end
+  validates :name, presence: true
+  validates :name, uniqueness: true
 
-  def self.find(id)
-    return nil if id.nil?
-    NAMES[id-1]
-  end
-
-  def self.find_by_name(name)
-    return nil if name.nil? or NAMES.empty?
-    NAMES.index(name.to_s)+1
-  end
+  has_many :notification_types_receivers, foreign_key: :notification_type_id, dependent: :destroy
 end

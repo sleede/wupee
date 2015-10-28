@@ -3,15 +3,16 @@ class NotifyWith::Notification < ActiveRecord::Base
 
   belongs_to :receiver, polymorphic: true
   belongs_to :attached_object, polymorphic: true
+  belongs_to :notification_type, class_name: "NotifyWith::NotificationType"
 
   validates_presence_of :receiver_id,
                         :receiver_type,
                         :attached_object_id,
                         :attached_object_type,
-                        :notification_type_id
+                        :notification_type
 
   def send_notification(type: nil, attached_object: nil)
-    self.notification_type_id = NotifyWith::NotificationType.find_by_name(type)
+    self.notification_type = NotifyWith::NotificationType.find_by!(name: type)
     self.attached_object = attached_object
     self
   end
@@ -19,10 +20,6 @@ class NotifyWith::Notification < ActiveRecord::Base
   def to(receiver)
     self.receiver = receiver
     self
-  end
-
-  def notification_type
-    NotifyWith::NotificationType.find(notification_type_id)
   end
 
   def mark_as_read

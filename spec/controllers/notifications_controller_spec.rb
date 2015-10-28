@@ -19,7 +19,7 @@ RSpec.describe API::NotificationsController, type: :controller do
       get :index, format: :json
       expect(json.size).to eq 1
       expect(json[0]['id']).to eq notification.id
-      expect(json[0]['message']['title']).to eq notification.notification_type
+      expect(json[0]['message']['title']).to eq notification.notification_type.name
     end
   end
 
@@ -29,7 +29,7 @@ RSpec.describe API::NotificationsController, type: :controller do
     it "should returns a notification from a rendered template" do
       get :show, format: :json, id: notification.id
       expect(json['id']).to eq notification.id
-      expect(json['message']['title']).to eq notification.notification_type
+      expect(json['message']['title']).to eq notification.notification_type.name
     end
   end
 

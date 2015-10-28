@@ -11,8 +11,16 @@ class NotifyWith::InstallGenerator < Rails::Generators::Base
     @prev_migration_nr.to_s
   end
 
-  def copy_notification_migration
-    migration_template "create_notification.rb", "db/migrate/create_notification.rb"
+  def copy_notifications_migration
+    migration_template "create_notifications.rb", "db/migrate/create_notifications.rb"
+  end
+
+  def copy_notification_types_migration
+    migration_template "create_notification_types.rb", "db/migrate/create_notification_types.rb"
+  end
+
+  def copy_notification_types_receivers_migration
+    migration_template "create_notification_types_receivers.rb", "db/migrate/create_notification_types_receivers.rb"
   end
 
   def copy_notifications_mailer

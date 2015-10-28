@@ -18,7 +18,7 @@ RSpec.describe NotificationsMailer do
     end
 
     it 'should have correct subject' do
-      expect(@mail.subject).to eq I18n.t(".notifications_mailer.send_mail_by.subject_#{notification.notification_type}")
+      expect(@mail.subject).to eq I18n.t(".notifications_mailer.send_mail_by.subject_#{notification.notification_type.name}")
     end
 
     it 'should have correct receiver' do

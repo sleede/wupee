@@ -11,13 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150216115438) do
+ActiveRecord::Schema.define(version: 20151028111239) do
 
   create_table "messages", force: :cascade do |t|
     t.string   "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "notification_types", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "notification_types", ["name"], name: "index_notification_types_on_name", unique: true
+
+  create_table "notification_types_receivers", force: :cascade do |t|
+    t.integer  "notification_type_id"
+    t.integer  "receiver_id"
+    t.string   "receiver_type"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "notification_types_receivers", ["notification_type_id"], name: "index_notification_types_receivers_on_notification_type_id"
+  add_index "notification_types_receivers", ["receiver_type", "receiver_id"], name: "idx_notif_typ_receiv_on_receiver_type_and_receiver_id"
 
   create_table "notifications", force: :cascade do |t|
     t.integer  "receiver_id"
