@@ -1,6 +1,4 @@
 class Wupee::Notification < ActiveRecord::Base
-  self.table_name = 'notifications'
-
   belongs_to :receiver, polymorphic: true
   belongs_to :attached_object, polymorphic: true
   belongs_to :notification_type, class_name: "Wupee::NotificationType"

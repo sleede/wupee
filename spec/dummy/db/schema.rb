@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151028111239) do
+ActiveRecord::Schema.define(version: 20151029113122) do
 
   create_table "messages", force: :cascade do |t|
     t.string   "body"
@@ -19,7 +19,14 @@ ActiveRecord::Schema.define(version: 20151028111239) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "notification_type_configurations", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
+    t.string   "name"
+    t.string   "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "wupee_notification_type_configurations", force: :cascade do |t|
     t.integer  "notification_type_id"
     t.integer  "receiver_id"
     t.string   "receiver_type"
@@ -28,18 +35,18 @@ ActiveRecord::Schema.define(version: 20151028111239) do
     t.datetime "updated_at",                       null: false
   end
 
-  add_index "notification_type_configurations", ["notification_type_id"], name: "index_notification_type_configurations_on_notification_type_id"
-  add_index "notification_type_configurations", ["receiver_type", "receiver_id"], name: "idx_notif_typ_config_on_receiver_type_and_receiver_id"
+  add_index "wupee_notification_type_configurations", ["notification_type_id"], name: "idx_wupee_notif_type_config_on_notification_type_id"
+  add_index "wupee_notification_type_configurations", ["receiver_type", "receiver_id"], name: "idx_wupee_notif_typ_config_on_receiver_type_and_receiver_id", unique: true
 
-  create_table "notification_types", force: :cascade do |t|
+  create_table "wupee_notification_types", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "notification_types", ["name"], name: "index_notification_types_on_name", unique: true
+  add_index "wupee_notification_types", ["name"], name: "index_wupee_notification_types_on_name", unique: true
 
-  create_table "notifications", force: :cascade do |t|
+  create_table "wupee_notifications", force: :cascade do |t|
     t.integer  "receiver_id"
     t.string   "receiver_type"
     t.integer  "attached_object_id"
@@ -49,13 +56,6 @@ ActiveRecord::Schema.define(version: 20151028111239) do
     t.boolean  "is_sent",              default: false
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string   "name"
-    t.string   "email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
 end

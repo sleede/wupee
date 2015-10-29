@@ -1,6 +1,4 @@
 class Wupee::NotificationType < ActiveRecord::Base
-  self.table_name = 'notification_types'
-
   validates :name, presence: true
   validates :name, uniqueness: true
 
