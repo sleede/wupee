@@ -1,4 +1,4 @@
 en:
-  notifications_mailer:
-    send_mail_by:
-      subject_notify_new_message: "notify_new_message"
+  wupee:
+    email_subjects:
+      admin_user_created: "admin_user_created"
