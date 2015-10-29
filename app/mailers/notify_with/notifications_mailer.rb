@@ -8,8 +8,6 @@ module NotifyWith
       @attached_object = notification.attached_object
 
       if !respond_to?(notification.notification_type.name)
-        p '-------------------------------'
-        puts self.object_id
         class_eval %Q{
           def #{notification.notification_type.name}
             mail to: @recipient.email,

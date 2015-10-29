@@ -13,11 +13,11 @@ RSpec.describe NotificationsMailer do
       @mail = subject.send_mail_by(notification).deliver_now
     end
 
-    it 'should send success' do
+    it 'should be sent' do
       expect(ActionMailer::Base.deliveries).not_to be_empty
     end
 
-    it 'should have correct subject' do
+    it 'should have the correct subject' do
       expect(@mail.subject).to eq I18n.t(".notifications_mailer.send_mail_by.subject_#{notification.notification_type.name}")
     end
 
@@ -25,8 +25,8 @@ RSpec.describe NotificationsMailer do
       expect(@mail.to).to eq [notification.receiver.email]
     end
 
-    it 'should notification mark as send' do
-      expect(notification.is_send).to eq true
+    it 'should mark notification as sent' do
+      expect(notification.is_sent).to eq true
     end
   end
 end
