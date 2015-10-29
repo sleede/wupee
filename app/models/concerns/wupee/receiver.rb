@@ -1,5 +1,5 @@
 module Wupee
-  module NotificationReceiver
+  module Receiver
     extend ActiveSupport::Concern
 
     included do
