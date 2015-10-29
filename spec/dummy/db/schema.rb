@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 20151029113122) do
   end
 
   add_index "wupee_notification_type_configurations", ["notification_type_id"], name: "idx_wupee_notif_type_config_on_notification_type_id"
-  add_index "wupee_notification_type_configurations", ["receiver_type", "receiver_id"], name: "idx_wupee_notif_typ_config_on_receiver_type_and_receiver_id", unique: true
+  add_index "wupee_notification_type_configurations", ["receiver_type", "receiver_id"], name: "idx_wupee_notif_typ_config_on_receiver_type_and_receiver_id"
 
   create_table "wupee_notification_types", force: :cascade do |t|
     t.string   "name"

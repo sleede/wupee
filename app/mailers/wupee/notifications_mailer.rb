@@ -2,7 +2,7 @@ module Wupee
   class NotificationsMailer < ActionMailer::Base
     after_action :mark_notification_as_send
 
-    def send_mail_by(notification)
+    def send_mail_for(notification)
       @notification = notification
       @recipient = notification.receiver
       @attached_object = notification.attached_object
@@ -11,7 +11,7 @@ module Wupee
         class_eval %Q{
           def #{notification.notification_type.name}
             mail to: @recipient.email,
-                 subject: t('.subject_#{notification.notification_type.name}'),
+                 subject: t('wupee.email_subjects.#{notification.notification_type.name}'),
                  template_name: '#{notification.notification_type.name}',
                  content_type: 'text/html'
           end
