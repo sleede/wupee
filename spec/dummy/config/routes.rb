@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount NotifyWith::Engine, at: "/notify_with"
+  mount Wupee::Engine, at: "/wupee"
 end

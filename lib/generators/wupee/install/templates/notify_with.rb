@@ -1,0 +1,1 @@
+Wupee.mailer = NotificationsMailer

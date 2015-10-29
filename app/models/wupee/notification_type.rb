@@ -1,4 +1,4 @@
-class NotifyWith::NotificationType < ActiveRecord::Base
+class Wupee::NotificationType < ActiveRecord::Base
   self.table_name = 'notification_types'
 
   validates :name, presence: true
@@ -11,7 +11,7 @@ class NotifyWith::NotificationType < ActiveRecord::Base
       receivers.each do |receiver|
         after_create do
           receiver.to_s.constantize.pluck(:id).each do |receiver_id|
-            NotifyWith::NotificationTypeConfiguration.create!(notification_type: self, receiver_type: receiver, receiver_id: receiver_id)
+            Wupee::NotificationTypeConfiguration.create!(notification_type: self, receiver_type: receiver, receiver_id: receiver_id)
           end
         end
       end

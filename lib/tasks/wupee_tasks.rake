@@ -1,4 +1,4 @@
 # desc "Explaining what the task does"
-# task :notify_with do
+# task :wupee do
 #   # Task goes here
 # end

@@ -1,3 +1,3 @@
 class Message < ActiveRecord::Base
-  include NotifyWith::NotificationAttachedObject
+  include Wupee::NotificationAttachedObject
 end

@@ -1,4 +1,4 @@
-module NotifyWith
+module Wupee
   class NotificationsMailer < ActionMailer::Base
     after_action :mark_notification_as_send
 

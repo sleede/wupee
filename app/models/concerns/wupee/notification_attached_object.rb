@@ -1,4 +1,4 @@
-module NotifyWith
+module Wupee
   module NotificationAttachedObject
     extend ActiveSupport::Concern
 

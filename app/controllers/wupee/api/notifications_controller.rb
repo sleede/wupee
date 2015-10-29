@@ -1,4 +1,4 @@
-module NotifyWith
+module Wupee
   class Api::NotificationsController < ApplicationController
     respond_to :json
     before_action :set_notification, only: [:show, :update]

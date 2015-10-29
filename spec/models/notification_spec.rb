@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe NotifyWith::Notification, type: :model do
+RSpec.describe Wupee::Notification, type: :model do
   let!(:message) { create :message }
   let!(:receiver) { create :user }
   let!(:notification_type_name) { 'notify_new_message' }
@@ -8,13 +8,13 @@ RSpec.describe NotifyWith::Notification, type: :model do
 
   context "validations" do
     it "validates presence of receiver" do
-      notification = NotifyWith::Notification.new
+      notification = Wupee::Notification.new
       notification.valid?
       expect(notification.errors).to have_key :receiver
     end
 
     it "validates presence of notification_type" do
-      notification = NotifyWith::Notification.new
+      notification = Wupee::Notification.new
       notification.valid?
       expect(notification.errors).to have_key :notification_type
     end
@@ -51,7 +51,7 @@ RSpec.describe NotifyWith::Notification, type: :model do
   # this test has to be moved to notification_receiver spec
   describe 'receiver' do
     it 'should can return his all notifications' do
-      notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
+      notification = Wupee::Notification.new.send_notification(type: notification_type_name, attached_object: message)
                                      .to(receiver)
       expect {notification.save}.to change{receiver.notifications.count}.from(0).to(1)
     end
@@ -78,13 +78,13 @@ RSpec.describe NotifyWith::Notification, type: :model do
   end
 
   it '#deliver_now should send a mail' do
-    notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
+    notification = Wupee::Notification.new.send_notification(type: notification_type_name, attached_object: message)
                                    .to(receiver)
     expect(notification.deliver_now).to be_a(Mail::Message)
   end
 
   it '#deliver_later should send later a mail' do
-    notification = NotifyWith::Notification.new.send_notification(type: notification_type_name, attached_object: message)
+    notification = Wupee::Notification.new.send_notification(type: notification_type_name, attached_object: message)
                                    .to(receiver)
     expect(notification.deliver_later).to be_a(ActionMailer::DeliveryJob)
   end

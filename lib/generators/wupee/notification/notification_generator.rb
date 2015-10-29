@@ -1,4 +1,4 @@
-class NotifyWith::NotificationGenerator < Rails::Generators::NamedBase
+class Wupee::NotificationGenerator < Rails::Generators::NamedBase
   def create_notification_mail_template_file
     create_file "app/views/notifications_mailer/#{file_name}.html.erb", <<-FILE
 <%# this is a mail template of notifcation #{file_name} %>
@@ -29,6 +29,6 @@ json.url 'a url for redirect to attached_object'
   end
 
   def create_notification_type_object
-    NotifyWith::NotificationType.create!(name: file_name)
+    Wupee::NotificationType.create!(name: file_name)
   end
 end

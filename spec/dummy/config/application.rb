@@ -11,7 +11,7 @@ require "jbuilder"
 # require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
-require "notify_with"
+require "wupee"
 
 module Dummy
   class Application < Rails::Application

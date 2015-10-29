@@ -1,4 +1,4 @@
-class NotifyWith::InstallGenerator < Rails::Generators::Base
+class Wupee::InstallGenerator < Rails::Generators::Base
   include Rails::Generators::Migration
   source_root File.expand_path('../templates', __FILE__)
 
@@ -47,12 +47,12 @@ class NotifyWith::InstallGenerator < Rails::Generators::Base
   #     CODE
   # end
 
-  def add_notify_with_routes
-    route 'mount NotifyWith::Engine, at: "/notify_with"'
+  def add_wupee_routes
+    route 'mount Wupee::Engine, at: "/wupee"'
   end
 
   def copy_initializer
-    template "notify_with.rb", "config/initializers/notify_with.rb"
+    template "wupee.rb", "config/initializers/wupee.rb"
   end
 
   def add_subject_locale

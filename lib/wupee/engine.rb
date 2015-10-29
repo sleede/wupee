@@ -1,6 +1,6 @@
-module NotifyWith
+module Wupee
   class Engine < ::Rails::Engine
-    isolate_namespace NotifyWith
+    isolate_namespace Wupee
 
     config.generators do |g|
       g.test_framework      :rspec,        fixture: false

@@ -1,15 +1,15 @@
 $:.push File.expand_path("../lib", __FILE__)
 
 # Maintain your gem's version:
-require "notify_with/version"
+require "wupee/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "notify_with"
-  s.version     = NotifyWith::VERSION
-  s.authors     = ["Peng DU"]
-  s.email       = ["peng@sleede.com"]
-  s.homepage    = "https://github.com/sleede/notify_with"
+  s.name        = "wupee"
+  s.version     = Wupee::VERSION
+  s.authors     = ["Peng DU", "Nicolas Florentin"]
+  s.email       = ["peng@sleede.com", "nicolas@sleede.com"]
+  s.homepage    = "https://github.com/sleede/wupee"
   s.summary     = "A simple notification system for sleede rails project"
   s.description = "A simple notification system for sleede rails project"
   s.license     = "MIT"

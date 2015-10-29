@@ -1,20 +1,20 @@
-# NotifyWith
+# Wupee
 ==========
 Very simple rails notification system (send a mail and a controller for render json) for sleede project.
 
 ## Install:
 ```ruby
-gem 'notify_with'
+gem 'wupee'
 ```
 ```bash
-$ rails g notify_with:install
+$ rails g wupee:install
 $ rake db:migrate
 ```
 
 ## Getting started:
 ### 1. Generate notification type
 ```bash
-rails g notify_with:notification notify_new_message
+rails g wupee:notification notify_new_message
 ```
 ### 2. Edit mail template and json template
 Edit app/views/notifications_mailer/notify_new_message.html.erb
@@ -42,14 +42,14 @@ notification.deliver_later
 ### 5. Utility
 ```ruby
 class Message < ActiveRecord::Base
-  include NotifyWith::NotificationAttachedObject
+  include Wupee::NotificationAttachedObject
 end
 # can destroy all notifications attached is message
 message.destroy
 ```
 ```ruby
 class User < ActiveRecord::Base
-  include NotifyWith::NotificationReceiver
+  include Wupee::NotificationReceiver
 end
 user.notifications
 # => [list of notifications]

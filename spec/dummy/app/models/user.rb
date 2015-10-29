@@ -1,3 +1,3 @@
 class User < ActiveRecord::Base
-  include NotifyWith::NotificationReceiver
+  include Wupee::NotificationReceiver
 end

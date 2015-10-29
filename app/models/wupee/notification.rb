@@ -1,15 +1,15 @@
-class NotifyWith::Notification < ActiveRecord::Base
+class Wupee::Notification < ActiveRecord::Base
   self.table_name = 'notifications'
 
   belongs_to :receiver, polymorphic: true
   belongs_to :attached_object, polymorphic: true
-  belongs_to :notification_type, class_name: "NotifyWith::NotificationType"
+  belongs_to :notification_type, class_name: "Wupee::NotificationType"
 
   validates_presence_of :receiver,
                         :notification_type
 
   def send_notification(type: nil, attached_object: nil)
-    self.notification_type = NotifyWith::NotificationType.find_by!(name: type)
+    self.notification_type = Wupee::NotificationType.find_by!(name: type)
     self.attached_object = attached_object
     self
   end
@@ -28,10 +28,10 @@ class NotifyWith::Notification < ActiveRecord::Base
   end
 
   def deliver_now
-    NotifyWith.mailer.send_mail_by(self).deliver_now if save
+    Wupee.mailer.send_mail_by(self).deliver_now if save
   end
 
   def deliver_later
-    NotifyWith.mailer.send_mail_by(self).deliver_later if save
+    Wupee.mailer.send_mail_by(self).deliver_later if save
   end
 end

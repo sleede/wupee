@@ -2,14 +2,14 @@ Description:
     Generates model notification and notification_type, a mailer, an initializer
 
 Example:
-    rails generate notify_with:install
+    rails generate wupee:install
 
     This will create:
         db/migrate/created_notifcation.rb
         app/models/notification.rb
         app/models/notification_type.rb
         app/mailers/notifications_mailer.rb
-        config/initializers/notify_with.rb
+        config/initializers/wupee.rb
 
     this will update:
         config/locales/{local}.yml
