@@ -1,6 +1,6 @@
-class CreateNotifications < ActiveRecord::Migration
+class CreateWupeeNotifications < ActiveRecord::Migration
   def change
-    create_table :notifications do |t|
+    create_table :wupee_notifications do |t|
       t.references :receiver, polymorphic: true
       t.references :attached_object, polymorphic: true
       t.belongs_to :notification_type, foreign_key: true
