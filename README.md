@@ -1,6 +1,6 @@
 # Wupee
 
-Wupee is a simple gem which tries to fill the gap of lacking gems to manage notifications in Rails app.
+Wupee is a simple gem which tries to fill the gap of lacking gems to manage **notifications** in Rails app.
 Wupee is a opinionated solution which assumes that users needs to:
 
 * be able to receive notifications in the app
@@ -28,10 +28,12 @@ and bundle:
 $ bundle
 ```
 
-Run the generator:
+Run the generator, install migrations and migrate:
 
 ```bash
 $ rails g wupee:install
+$ rake wupee:install:migrations
+$ rake db:migrate
 ```
 
 Running the generator will do a few things:
@@ -64,13 +66,6 @@ Running the generator will do a few things:
     wupee:
       email_subjects:
   ```
-
-
-
-
-```bash
-$ rake db:migrate
-```
 
 ## Getting started:
 ### 1. Generate notification type
