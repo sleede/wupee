@@ -1,4 +1,5 @@
 en:
   wupee:
     email_subjects:
-      admin_user_created: "admin_user_created"
+      notify_new_message: "notify_new_message"
+      abc: "abc %{a_var_to_interpolate}"

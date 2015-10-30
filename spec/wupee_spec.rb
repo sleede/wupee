@@ -8,4 +8,8 @@ describe Wupee do
   it "has a getter for mailer" do
     expect(Wupee).to respond_to(:mailer)
   end
+
+  it "has method notify" do
+    expect(Wupee).to respond_to(:notify)
+  end
 end
