@@ -55,8 +55,10 @@ Running the generator will do a few things:
 
   ```ruby
   # app/mailers/notifications_mailers.rb
-  Wupee.mailer = NotificationsMailer
-  Wupee.deliver_when = :now
+  class NotificationsMailer < Wupee::NotificationsMailer
+    default from: 'contact@sleede.com'
+    layout false
+ end
   ```
   
 4. adds wupee to your locale yml file (for email subjects)
@@ -68,52 +70,44 @@ Running the generator will do a few things:
   ```
 
 ## Getting started:
-### 1. Generate notification type
+
+### Generate a new notification type 
+
 ```bash
-rails g wupee:notification notify_new_message
-```
-### 2. Edit mail template and json template
-Edit app/views/notifications_mailer/notify_new_message.html.erb
-
-Edit config/locales/{locale}.yml
-
-Edit app/views/api/notifications/_notify_new_message.json.jbuilder
-
-### 3. Build a notifcation:
-```ruby
-receiver = User.create(email: 'contact@sleede.com')
-message = Message.create(body: 'this a message')
-notification = Notification.new.send_notification(type: 'notify_new_message', attached_object: message)
-                .to(receiver)
-```
-### 4. Save and send a notifcation:
-To save and send:
-```ruby
-notification.deliver_now
-```
-or
-```ruby
-notification.deliver_later
-```
-### 5. Utility
-```ruby
-class Message < ActiveRecord::Base
-  include Wupee::NotificationAttachedObject
-end
-# can destroy all notifications attached is message
-message.destroy
-```
-```ruby
-class User < ActiveRecord::Base
-  include Wupee::NotificationReceiver
-end
-user.notifications
-# => [list of notifications]
+rails g wupee:notification_type user_has_been_created
 ```
 
-## Testing:
-```bash
-$ rake
+Will execute a few things:
+
+1. add an entry to your locale yml file :
+
+ ```yml
+ en:
+   wupee:
+     email_subjects:
+       user_has_been_created: "user_has_been_created" 
+ ```
+ Feel free to edit the subject, you can put variables, example
+ ```yml
+  ...
+      user_has_been_created: "New user created: %{user_full_name}"
+ ```
+ 
+2. create a json template for the notification:
+
+ ```ruby
+ json.subject ""
+ json.body ""
+ json.url ""
+ ```
+ In this template, you have access to the **notification** variable.
+ You can customize it to fit your need, this is just an example.
+ 
+3. create an empty html template for the notification:
+```html
+<!-- app/views/wupee/notifications/_user_has_been_created.html.erb -->
 ```
+ 
+
 
 This project rocks and uses MIT-LICENSE.
