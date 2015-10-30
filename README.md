@@ -1,13 +1,74 @@
 # Wupee
-==========
-Very simple rails notification system (send a mail and a controller for render json) for sleede project.
 
+Wupee is a simple gem which tries to fill the gap of lacking gems to manage notifications in Rails app.
+Wupee is a opinionated solution which assumes that users needs to:
+
+* be able to receive notifications in the app
+* be able to receive notifications by mail
+* be able to configure if they wants to either receive emails AND notifications or emails or only notifications or nothing
+
+Right now, only the receiver can configure what he wants to receive. You can't create an *email only* notification or a *app only* notification but that could be a near future feature. 
+
+The main object of the solution is the <strong>Wupee::Notification which stores</strong>:
+* receiver (polymorphic): the recipient of the message
+* attached_object (polymorphic): the subject of the notification
+* notification_type_id: a reference to a Wupee::NotificationType object
+* is_read: bolean
+
+ 
 ## Install:
+
+To use it, add it to your Gemfile:
 ```ruby
 gem 'wupee'
 ```
+
+and bundle:
+```bash
+$ bundle
+```
+
+Run the generator:
+
 ```bash
 $ rails g wupee:install
+```
+
+Running the generator will do a few things:
+
+1. add the engine routes to your routes.rb:
+
+  ```ruby
+  # config/routes.rb
+  mount Wupee::Engine, at: "/wupee"
+  ```
+2. create wupee initializer:
+
+  ```ruby
+  # config/initializers/wupee.rb
+  Wupee.mailer = NotificationsMailer
+  Wupee.deliver_when = :now
+  ```
+3. create a mailer NotificationsMailers which inheritates from Wupee::NotificationsMailer
+
+  ```ruby
+  # app/mailers/notifications_mailers.rb
+  Wupee.mailer = NotificationsMailer
+  Wupee.deliver_when = :now
+  ```
+  
+4. adds wupee to your locale yml file (for email subjects)
+  ```yml
+  # config/locales/en.yml
+  en:
+    wupee:
+      email_subjects:
+  ```
+
+
+
+
+```bash
 $ rake db:migrate
 ```
 
