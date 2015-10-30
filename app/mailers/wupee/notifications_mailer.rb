@@ -4,14 +4,14 @@ module Wupee
 
     def send_mail_for(notification, subject_interpolations = {})
       @notification = notification
-      @recipient = notification.receiver
+      @receiver = notification.receiver
       @attached_object = notification.attached_object
       @subject_interpolations = subject_interpolations
 
       if !respond_to?(notification.notification_type.name)
         class_eval %Q{
           def #{notification.notification_type.name}
-            mail to: @recipient.email,
+            mail to: @receiver.email,
                  subject: t('wupee.email_subjects.#{notification.notification_type.name}', @subject_interpolations),
                  template_name: '#{notification.notification_type.name}',
                  content_type: 'text/html'
