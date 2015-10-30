@@ -20,7 +20,7 @@ RSpec.describe Wupee::Api::NotificationsController, type: :controller do
       get :index, format: :json
       expect(json.size).to eq 1
       expect(json[0]['id']).to eq notification.id
-      expect(json[0]['message']['title']).to eq notification.notification_type.name
+      expect(json[0]['message']['subject']).to eq notification.notification_type.name
     end
   end
 
@@ -30,7 +30,7 @@ RSpec.describe Wupee::Api::NotificationsController, type: :controller do
     it "should returns a notification from a rendered template" do
       get :show, format: :json, id: notification.id
       expect(json['id']).to eq notification.id
-      expect(json['message']['title']).to eq notification.notification_type.name
+      expect(json['message']['subject']).to eq notification.notification_type.name
     end
   end
 
@@ -38,7 +38,7 @@ RSpec.describe Wupee::Api::NotificationsController, type: :controller do
     render_views
 
     it "should mark as read" do
-      put :update, format: :json, id: notification.id
+      put :update, id: notification.id, format: :json
       expect(json['is_read']).to eq true
     end
   end
