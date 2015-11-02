@@ -42,7 +42,7 @@ module Wupee
       notif_type_configs = Wupee::NotificationTypeConfiguration.includes(:receiver).where(receiver: @receiver_s, notification_type: @notification_type)
 
       notif_type_configs.each do |notif_type_config|
-        notification = Wupee::Notification.new(receiver: notif_type_config.receiver, notification_type: @notification_type)
+        notification = Wupee::Notification.new(receiver: notif_type_config.receiver, notification_type: @notification_type, attached_object: @attached_object)
         notification.is_read = true unless notif_type_config.wants_notification?
         notification.save!
 
