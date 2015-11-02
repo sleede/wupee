@@ -10,14 +10,14 @@ Gem::Specification.new do |s|
   s.authors     = ["Peng DU", "Nicolas Florentin"]
   s.email       = ["peng@sleede.com", "nicolas@sleede.com"]
   s.homepage    = "https://github.com/sleede/wupee"
-  s.summary     = "A simple notification system for sleede rails project"
-  s.description = "A simple notification system for sleede rails project"
+  s.summary     = "Simple notification system for rails"
+  s.description = "Simple notification system for rails"
   s.license     = "MIT"
 
   s.files = Dir["{app,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "rails", ">= 4.2.0"
+  s.add_dependency "rails", '~> 4.2', '>= 4.2.0'
   #s.add_dependency "responders", "~> 2.0"
   s.add_dependency "jbuilder", "~> 2.0"
 
