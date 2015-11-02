@@ -30,7 +30,7 @@ RSpec.describe Wupee::Api::NotificationsController, type: :controller do
     it "should returns a notification from a rendered template" do
       get :show, format: :json, id: notification.id
       expect(json['id']).to eq notification.id
-      expect(json['message']['subject']).to eq notification.notification_type.name
+      expect(json['message']['subject']).to eq "subject"
     end
   end
 
