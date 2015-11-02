@@ -16,8 +16,8 @@ class Wupee::InstallGenerator < Rails::Generators::Base
   def add_subject_locale
     append_file "config/locales/#{I18n.locale.to_s}.yml" do
       <<-CODE
-        wupee:
-          email_subjects:
+  wupee:
+    email_subjects:
       CODE
     end
   end
