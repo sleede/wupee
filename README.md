@@ -186,6 +186,10 @@ The controller have various actions all scoped for the current user:
 The class also define 2 methods which you could use (in your views for example):
  * `wants_email?` : return a boolean
  * `wants_notification?` : return a boolean
+ 
+## Important to know!
+
+The system relies on the fact that you have an object in db for each couple of [receiver, `Wupee::NotificationType`]. Even if the gem provides callbacks to take care of that, be sure that those objects are created otherwise notifications won't be sent for thoses receivers.
 
 ## License
 
