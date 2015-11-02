@@ -1,3 +1,3 @@
-json.subject notification.notification_type.name
+json.subject "subject"
 json.body "body"
 json.url "url"
