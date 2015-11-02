@@ -110,13 +110,13 @@ Will execute a few things:
  You can customize it to fit your need, this is just an example.
  
 3. create an empty html template for the notification:
-```html
-<!-- app/views/wupee/notifications/_user_has_been_created.html.erb -->
-```
- 
-You will have to create your email template as the generator doesn't create it. 
-For example, if your mailer is named `NotificationsMailer`, your template will take place in
-`app/views/notifications_mailer/user_has_been_created.html.erb`
+ ```html
+ <!-- app/views/wupee/notifications/_user_has_been_created.html.erb -->
+ ```
+
+4. You will have to create your email template as the generator doesn't create it. 
+ For example, if your mailer is named `NotificationsMailer`, your template will take place in
+ `app/views/notifications_mailer/user_has_been_created.html.erb`
 
 ### Understand the Wupee::NotificationTypeConfiguration model
 
@@ -126,7 +126,7 @@ An object of the class `Wupee::NotificationTypeConfiguration` references/stores:
 * value (an enum)
 
 The attribute **value** can be:
-* 'both' : the receiver wants notifications **AND** emails of the `Wupee::NotificationType` type
+* 'both' : the receiver wants notifications **AND** emails of the `Wupee::NotificationType` type (default value)
 * 'nothing' : the receiver doesn't want to receive **nothing** from the `Wupee::NotificationType` type
 * 'email' : the receiver wants to receive **only** emails
 * 'notification' : the receiver wants to receive **only** notifications
@@ -158,7 +158,7 @@ Imagine that you want to notify all admin that a new user signed up in your app 
    attached_object @the_new_user
    notif_type :user_has_been_created # you can also pass an instance of a Wupee::NotificationType class to this method
    subject_vars user_full_name: Proc.new { |notification| notification.attached_object.full_name } # variables to be interpolated the fill in the subject of the email (obviously optional)
-   receivers User.admin # you can use the method receiver instead of receivers
+   receivers User.admin # you can use the method receiver instead of receivers for clarity if you pass only one instance of a receiver
    deliver :now # you can overwrite global configuration here, optional
  end
 ```
@@ -180,6 +180,16 @@ The controller have various actions all scoped for the current user:
  * `wupee/api/notifications#show` : fetch a notification
  * `wupee/api/notifications#update` : mark as read a notification
  * `wupee/api/notifications#update_all` : mark as read all notifications
+
+## Wupee::NotificationTypeConfiguration
+
+The class also define 2 methods which you could use (in your views for example):
+ * `wants_email?` : return a boolean
+ * `wants_notification?` : return a boolean
+ 
+## Important to know!
+
+The system relies on the fact that you have an object in db for each couple of [receiver, `Wupee::NotificationType`]. Even if the gem provides callbacks to take care of that, be sure that those objects are created otherwise notifications won't be sent for thoses receivers.
 
 ## License
 
