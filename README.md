@@ -126,7 +126,7 @@ An object of the class `Wupee::NotificationTypeConfiguration` references/stores:
 * value (an enum)
 
 The attribute **value** can be:
-* 'both' : the receiver wants notifications **AND** emails of the `Wupee::NotificationType` type
+* 'both' : the receiver wants notifications **AND** emails of the `Wupee::NotificationType` type (default value)
 * 'nothing' : the receiver doesn't want to receive **nothing** from the `Wupee::NotificationType` type
 * 'email' : the receiver wants to receive **only** emails
 * 'notification' : the receiver wants to receive **only** notifications
