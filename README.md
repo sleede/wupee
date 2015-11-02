@@ -9,10 +9,10 @@ Wupee is a opinionated solution which assumes that users needs to:
 
 Right now, only the receiver can configure what he wants to receive. You can't create an *email only* notification or a *app only* notification but that could be a near future feature. 
 
-The main object of the solution is the <strong>Wupee::Notification which stores</strong>:
+The main object of the solution is the `Wupee::Notification which stores`:
 * receiver (polymorphic): the recipient of the message
 * attached_object (polymorphic): the subject of the notification
-* notification_type_id: a reference to a Wupee::NotificationType object
+* notification_type_id: a reference to a `Wupee::NotificationType` object
 * is_read: boolean
 
  
@@ -48,17 +48,18 @@ Running the generator will do a few things:
 
   ```ruby
   # config/initializers/wupee.rb
-  Wupee.mailer = NotificationsMailer
-  Wupee.deliver_when = :now
+  Wupee.mailer = NotificationsMailer # the class of the mailer you will use to send the emails
+  Wupee.deliver_when = :now # use :later if you already configured a queuing system
   
   Wupee::NotificationType.class_eval do
-    create_configurations_for 'User'
-  end
+    create_configurations_for 'User' # class name of your notification receivers, can be various 'User', 'Admin',
+  end                                # enable callbacks to create Wupee::NotificationTypeConfiguration object of 
+  # each user when you create a new Wupee::NotificationType
   ```
-3. create a mailer NotificationsMailers which inheritates from Wupee::NotificationsMailer
+3. create a mailer `NotificationsMailer` which inheritates from `Wupee::NotificationsMailer`
 
   ```ruby
-  # app/mailers/notifications_mailers.rb
+  # app/mailers/notifications_mailer.rb
   class NotificationsMailer < Wupee::NotificationsMailer
     default from: 'contact@sleede.com'
     layout false
@@ -103,6 +104,7 @@ Will execute a few things:
  json.subject ""
  json.body ""
  json.url ""
+ # none of this json attribute are mandatory! 
  ```
  In this template, you have access to the **notification** variable.
  You can customize it to fit your need, this is just an example.
@@ -113,8 +115,60 @@ Will execute a few things:
 ```
  
 You will have to create your email template as the generator doesn't create it. 
-For example, if your mailer is named **NotificationsMailer**, your template will take place in
+For example, if your mailer is named `NotificationsMailer`, your template will take place in
 `app/views/notifications_mailer/user_has_been_created.html.erb`
 
+### Understand the Wupee::NotificationTypeConfiguration model
+
+An object of the class `Wupee::NotificationTypeConfiguration` references/stores:
+* receiver (polymorphic)
+* notification_type (object of class `Wupee::NotificationType`)
+* value (an enum)
+
+The attribute **value** can be:
+* 'both' : the receiver wants notifications **AND** emails of the `Wupee::NotificationType` type
+* 'nothing' : the receiver doesn't want to receive **nothing** from the `Wupee::NotificationType` type
+* 'email' : the receiver wants to receive **only** emails
+* 'notification' : the receiver wants to receive **only** notifications
+
+Just let the user edit this object to make him able to activate/deactivate notifications or emails.
+
+### Use the concerns
+
+#### Wupee::Receiver
+
+Including the concern `Wupee::Receiver` in your receiver class (probably the `User` class) permits a few things:
+ * get notifications of a user: `@user.notifications`
+ * get notifications_type_configurations of a user: `@user.notifications_type_configurations`
+ * execute an after_create callback to create `Wupee::NotificationTypeConfiguration` for each `Wupee::NotificationType` object for the receiver
+ * destroy `Wupee::Notification` and `Wupee::NotificationTypeConfiguration` associated to the receiver from db if it is destroyed
+ 
+#### Wupee::AttachedObject
+
+Including the concern `Wupee::AttachedObject` in your attached object classe(s) permits a few things:
+ * get notifications associated to an attached object: `@attached_object.notifications_as_attached_object`
+ * destroy `Wupee::Notification` associated to the attached object if it is destroyed
+
+### Use the DSL to send notifications
+
+Imagine that you want to notify all admin that a new user signed up in your app and that you have a scope `admin` in your `User` class.
+
+```ruby
+ Wupee.notify do
+   attached_object @the_new_user
+   notif_type :user_has_been_created # you can also pass an instance of a Wupee::NotificationType class to this method
+   subject_vars user_full_name: Proc.new { |notification| notification.attached_object.full_name } # variables to be interpolated the fill in the subject of the email (obviously optional)
+   receivers User.admin # you can use the method receiver instead of receivers
+   deliver :now # you can overwrite global configuration here, optional
+ end
+```
+
+You can also use the method `notify` this way:
+
+```ruby
+ Wupee.notify attached_object: @the_new_user, notif_type: :user_has_been_created, subject_vars user_full_name: Proc.new { |notification| notification.attached_object.full_name }, receivers: User.admin
+```
+
+## License
 
 This project rocks and uses MIT-LICENSE.
