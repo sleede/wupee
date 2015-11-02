@@ -60,8 +60,8 @@ module Wupee
       def interpolate_subject_vars(notification)
         subject_vars_interpolated = {}
         @subject_vars.each do |key, value|
-          subject_vars_interpolated[key] = if value.is_a?(Proc)
-            notification.instance_eval(value)
+          subject_vars_interpolated[key] = if value.kind_of?(Proc)
+            notification.instance_eval(&value)
           else
             value.to_s
           end
