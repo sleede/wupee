@@ -4,12 +4,12 @@ Wupee is a simple gem which tries to fill the gap of lacking gems to manage **no
 Wupee is a opinionated solution which assumes that users needs to:
 
 * be able to receive notifications in the app
-* be able to receive notifications by mail
+* be able to receive notifications by email
 * be able to configure if they wants to either receive emails AND notifications or emails or only notifications or nothing
 
 Right now, only the receiver can configure what he wants to receive. You can't create an *email only* notification or a *app only* notification but that could be a near future feature. 
 
-The main object of the solution is the `Wupee::Notification which stores`:
+The main object of the solution is the `Wupee::Notification` which stores:
 * receiver (polymorphic): the recipient of the message
 * attached_object (polymorphic): the subject of the notification
 * notification_type_id: a reference to a `Wupee::NotificationType` object
@@ -168,6 +168,18 @@ You can also use the method `notify` this way:
 ```ruby
  Wupee.notify attached_object: @the_new_user, notif_type: :user_has_been_created, subject_vars user_full_name: Proc.new { |notification| notification.attached_object.full_name }, receivers: User.admin
 ```
+
+The method will take care to check receiver's configurations to only send emails to those who want them.
+
+## Wupee::Api::NotificationsController 
+
+In order to make this controller work, you need a method `current_user` which return the user currently signed in.
+
+The controller have various actions all scoped for the current user:
+ * `wupee/api/notifications#index` : fetch notifications, take an optional parameter `is_read` (false by default) 
+ * `wupee/api/notifications#show` : fetch a notification
+ * `wupee/api/notifications#update` : mark as read a notification
+ * `wupee/api/notifications#update_all` : mark as read all notifications
 
 ## License
 
