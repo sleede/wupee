@@ -66,6 +66,8 @@ module Wupee
             value.to_s
           end
         end
+
+        subject_vars_interpolated
       end
   end
 end
