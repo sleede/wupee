@@ -110,13 +110,13 @@ Will execute a few things:
  You can customize it to fit your need, this is just an example.
  
 3. create an empty html template for the notification:
-```html
-<!-- app/views/wupee/notifications/_user_has_been_created.html.erb -->
-```
- 
-You will have to create your email template as the generator doesn't create it. 
-For example, if your mailer is named `NotificationsMailer`, your template will take place in
-`app/views/notifications_mailer/user_has_been_created.html.erb`
+ ```html
+ <!-- app/views/wupee/notifications/_user_has_been_created.html.erb -->
+ ```
+
+4. You will have to create your email template as the generator doesn't create it. 
+ For example, if your mailer is named `NotificationsMailer`, your template will take place in
+ `app/views/notifications_mailer/user_has_been_created.html.erb`
 
 ### Understand the Wupee::NotificationTypeConfiguration model
 
