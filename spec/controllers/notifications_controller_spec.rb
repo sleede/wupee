@@ -20,7 +20,7 @@ RSpec.describe Wupee::Api::NotificationsController, type: :controller do
       get :index, format: :json
       expect(json.size).to eq 1
       expect(json[0]['id']).to eq notification.id
-      expect(json[0]['message']['subject']).to eq notification.notification_type.name
+      expect(json[0]['message']['subject']).to eq "subject"
     end
   end
 
