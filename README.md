@@ -13,7 +13,7 @@ The main object of the solution is the <strong>Wupee::Notification which stores<
 * receiver (polymorphic): the recipient of the message
 * attached_object (polymorphic): the subject of the notification
 * notification_type_id: a reference to a Wupee::NotificationType object
-* is_read: bolean
+* is_read: boolean
 
  
 ## Install:
@@ -50,6 +50,10 @@ Running the generator will do a few things:
   # config/initializers/wupee.rb
   Wupee.mailer = NotificationsMailer
   Wupee.deliver_when = :now
+  
+  Wupee::NotificationType.class_eval do
+    create_configurations_for 'User'
+  end
   ```
 3. create a mailer NotificationsMailers which inheritates from Wupee::NotificationsMailer
 
@@ -108,6 +112,9 @@ Will execute a few things:
 <!-- app/views/wupee/notifications/_user_has_been_created.html.erb -->
 ```
  
+You will have to create your email template as the generator doesn't create it. 
+For example, if your mailer is named **NotificationsMailer**, your template will take place in
+`app/views/notifications_mailer/user_has_been_created.html.erb`
 
 
 This project rocks and uses MIT-LICENSE.
