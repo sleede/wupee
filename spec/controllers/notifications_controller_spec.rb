@@ -4,6 +4,13 @@ RSpec.describe Wupee::Api::NotificationsController, type: :controller do
   routes { Wupee::Engine.routes }
   let(:notification) { create :notification }
 
+  before :all do
+    Wupee::Api::NotificationsController.class_eval do
+      def current_user
+      end
+    end
+  end
+
   before :each do
     allow_any_instance_of(Wupee::Api::NotificationsController).to receive(:current_user).and_return(notification.receiver)
   end

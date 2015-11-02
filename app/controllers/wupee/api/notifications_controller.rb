@@ -2,9 +2,6 @@ module Wupee
   class Api::NotificationsController < ApplicationController
     before_action :set_notification, only: [:show, :update]
 
-    def current_user
-    end
-
     def index
       if params[:is_read]
         @notifications = current_user.notifications.where(is_read: params[:is_read] == "true")
