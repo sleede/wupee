@@ -158,7 +158,7 @@ Imagine that you want to notify all admin that a new user signed up in your app 
    attached_object @the_new_user
    notif_type :user_has_been_created # you can also pass an instance of a Wupee::NotificationType class to this method
    subject_vars user_full_name: Proc.new { |notification| notification.attached_object.full_name } # variables to be interpolated the fill in the subject of the email (obviously optional)
-   receivers User.admin # you can use the method receiver instead of receivers
+   receivers User.admin # you can use the method receiver instead of receivers for clarity if you pass only one instance of a receiver
    deliver :now # you can overwrite global configuration here, optional
  end
 ```
