@@ -181,6 +181,12 @@ The controller have various actions all scoped for the current user:
  * `wupee/api/notifications#update` : mark as read a notification
  * `wupee/api/notifications#update_all` : mark as read all notifications
 
+## Wupee::NotificationTypeConfiguration
+
+The class also define 2 methods which you could use (in your views for example):
+ * `wants_email?` : return a boolean
+ * `wants_notification?` : return a boolean
+
 ## License
 
 This project rocks and uses MIT-LICENSE.
