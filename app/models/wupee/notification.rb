@@ -6,6 +6,9 @@ class Wupee::Notification < ActiveRecord::Base
   validates_presence_of :receiver,
                         :notification_type
 
+  scope :unread, -> { where(is_read: false) }
+  scope :ordered, -> { order(created_at: :desc) }
+
   def mark_as_read
     update_columns(is_read: true)
   end
