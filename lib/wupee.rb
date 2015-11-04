@@ -5,7 +5,7 @@ module Wupee
 
   def self.notify(opts = {}, &block)
     wupee_notifier = Wupee::Notifier.new(opts)
-    wupee_notifier.instance_eval(&block) if block_given?
+    yield wupee_notifier if block_given?
     wupee_notifier.execute
   end
 end
