@@ -47,7 +47,7 @@ module Wupee
         notification.save!
 
         subject_interpolations = interpolate_subject_vars(notification)
-        send_email(notification, subject_interpolations) if notif_type_config.wants_notification?
+        send_email(notification, subject_interpolations) if notif_type_config.wants_email?
       end
     end
 
