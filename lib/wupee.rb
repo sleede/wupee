@@ -1,4 +1,5 @@
 require "wupee/engine"
+require "wupee/notifier"
 
 module Wupee
   mattr_accessor :mailer, :deliver_when
