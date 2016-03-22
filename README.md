@@ -157,6 +157,7 @@ Imagine that you want to notify all admin that a new user signed up in your app 
    n.attached_object @the_new_user
    n.notif_type :user_has_been_created # you can also pass an instance of a Wupee::NotificationType class to this method
    n.subject_vars user_full_name: Proc.new { |notification| notification.attached_object.full_name } # variables to be interpolated the fill in the subject of the email (obviously optional)
+   n.locals extra_data: "something" # extra_data will be accessible in template as @locals[:extra_data]
    n.receivers User.admin # you can use the method receiver instead of receivers for clarity if you pass only one instance of a receiver
    n.deliver :now # you can overwrite global configuration here, optional
  end
@@ -165,7 +166,7 @@ Imagine that you want to notify all admin that a new user signed up in your app 
 You can also use the method `notify` this way:
 
 ```ruby
- Wupee.notify attached_object: @the_new_user, notif_type: :user_has_been_created, subject_vars: { user_full_name: Proc.new { |notification| notification.attached_object.full_name } }, receivers: User.admin
+ Wupee.notify attached_object: @the_new_user, notif_type: :user_has_been_created, subject_vars: { user_full_name: Proc.new { |notification| notification.attached_object.full_name } }, locals: { extra_data: "Yeahhhhh" }, receivers: User.admin
 ```
 
 The method will take care to check receiver's configurations to only send emails to those who want them.
