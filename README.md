@@ -166,10 +166,20 @@ Imagine that you want to notify all admin that a new user signed up in your app 
 You can also use the method `notify` this way:
 
 ```ruby
- Wupee.notify attached_object: @the_new_user, notif_type: :user_has_been_created, subject_vars user_full_name: Proc.new { |notification| notification.attached_object.full_name }, receivers: User.admin
+ Wupee.notify attached_object: @the_new_user, notif_type: :user_has_been_created, subject_vars: { user_full_name: Proc.new { |notification| notification.attached_object.full_name } }, receivers: User.admin
 ```
 
 The method will take care to check receiver's configurations to only send emails to those who want them.
+
+### Rake tasks
+
+#### generate Wupee::NotificationTypeConfiguration objects for given Wupee::NotificationType name and for all receivers of given class (default to User)
+
+Example for a Wupee::NotificationType named 'user_destroyed':
+```bash
+rake 'wupee:generate_notification_type_configurations[user_destroyed]' # for User class
+rake 'wupee:generate_notification_type_configurations[user_destroyed,Admin]' # for Admin class
+```
 
 ## Wupee::Api::NotificationsController
 
