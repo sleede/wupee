@@ -166,7 +166,7 @@ Imagine that you want to notify all admin that a new user signed up in your app 
 You can also use the method `notify` this way:
 
 ```ruby
- Wupee.notify attached_object: @the_new_user, notif_type: :user_has_been_created, subject_vars user_full_name: Proc.new { |notification| notification.attached_object.full_name }, receivers: User.admin
+ Wupee.notify attached_object: @the_new_user, notif_type: :user_has_been_created, subject_vars: { user_full_name: Proc.new { |notification| notification.attached_object.full_name } }, receivers: User.admin
 ```
 
 The method will take care to check receiver's configurations to only send emails to those who want them.
