@@ -44,8 +44,8 @@ RSpec.describe Wupee::Notifier, type: :model do
   end
 
   it "doesn't raise ArgumentError if receiver or receivers is present" do
-    expect { Wupee::Notifier.new(notif_type: notif_type, receiver: user).execute }.not_to raise_error(ArgumentError)
-    expect { Wupee::Notifier.new(notif_type: notif_type, receivers: user).execute }.not_to raise_error(ArgumentError)
+    expect { Wupee::Notifier.new(notif_type: notif_type, receiver: user).execute }.not_to raise_error
+    expect { Wupee::Notifier.new(notif_type: notif_type, receivers: user).execute }.not_to raise_error
   end
 
   it "raises ArgumentError if notif_type is missing" do
