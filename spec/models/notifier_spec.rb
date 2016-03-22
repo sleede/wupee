@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Wupee::Notifier, type: :model do
+  let!(:notif_type) { Wupee::NotificationType.create!(name: "notify_new_message") }
+  let!(:user) { create :user }
 
   context "methods defined" do
     it { expect(subject).to respond_to(:notif_type) }
@@ -12,7 +14,6 @@ RSpec.describe Wupee::Notifier, type: :model do
   end
 
   it "has a method notif_type that can take Wupee::NotificationType instance or string/symbol as argument" do
-    notif_type = create :notification_type
     wupee_notifier = Wupee::Notifier.new
     wupee_notifier.notif_type(notif_type.name)
     expect(wupee_notifier.notification_type).to eq notif_type
@@ -22,8 +23,6 @@ RSpec.describe Wupee::Notifier, type: :model do
   end
 
   it "has a method execute to send notifications and mails depending on notification_type_configurations of the users" do
-    notif_type = Wupee::NotificationType.create!(name: "notify_new_message")
-
     user_1 = create :user
     user_2 = create :user
     user_3 = create :user
@@ -38,5 +37,18 @@ RSpec.describe Wupee::Notifier, type: :model do
     expect { wupee_notifier.execute }.to change { ActionMailer::Base.deliveries.size }.by(2)
     expect { wupee_notifier.execute }.to change { Wupee::Notification.where(is_read: true).count }.by(2)
     expect { wupee_notifier.execute }.to change { Wupee::Notification.count }.by(4)
+  end
+
+  it "raises ArgumentError if receiver or receivers is missing" do
+    expect { Wupee::Notifier.new(notif_type: notif_type).execute }.to raise_error(ArgumentError)
+  end
+
+  it "doesn't raise ArgumentError if receiver or receivers is present" do
+    expect { Wupee::Notifier.new(notif_type: notif_type, receiver: user).execute }.not_to raise_error(ArgumentError)
+    expect { Wupee::Notifier.new(notif_type: notif_type, receivers: user).execute }.not_to raise_error(ArgumentError)
+  end
+
+  it "raises ArgumentError if notif_type is missing" do
+    expect { Wupee::Notifier.new(receiver: user).execute }.to raise_error(ArgumentError)
   end
 end
