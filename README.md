@@ -7,7 +7,6 @@ Wupee is a opinionated solution which assumes that users needs to:
 * be able to receive notifications by email
 * be able to configure if they wants to either receive emails AND notifications or emails or only notifications or nothing
 
-Right now, only the receiver can configure what he wants to receive. You can't create an *email only* notification or a *app only* notification but that could be a near future feature.
 
 The main object of the solution is the `Wupee::Notification` which stores:
 * receiver (polymorphic): the recipient of the message
