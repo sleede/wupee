@@ -1,6 +1,6 @@
 module Wupee
   class Notifier
-    attr_reader :deliver_when, :attached_object, :receiver_s, :notification_type, :subject_vars
+    attr_reader :deliver_when, :attached_object, :receiver_s, :notification_type, :subject_vars, :locals
 
     def initialize(opts = {})
       @attached_object = opts[:attached_object]
@@ -9,6 +9,8 @@ module Wupee
       receiver(receiver_arg)
 
       @subject_vars = opts[:subject_vars] || {}
+      @locals = opts[:locals] || {}
+
       @deliver_when = opts[:deliver]
       notif_type(opts[:notif_type]) if opts[:notif_type]
     end
@@ -41,9 +43,13 @@ module Wupee
       @subject_vars = subject_vars
     end
 
+    def locals(locals = {})
+      @locals = locals
+    end
+
     def execute
-      raise ArgumentError.new('receiver or receivers is missing') if receiver_s.empty?
-      raise ArgumentError.new('notif_type is missing') if notification_type.nil?
+      raise ArgumentError.new('receiver or receivers is missing') if @receiver_s.empty?
+      raise ArgumentError.new('notif_type is missing') if @notification_type.nil?
 
       notif_type_configs = Wupee::NotificationTypeConfiguration.includes(:receiver).where(receiver: @receiver_s, notification_type: @notification_type)
 
@@ -52,28 +58,30 @@ module Wupee
         notification.is_read = true unless notif_type_config.wants_notification?
         notification.save!
 
-        subject_interpolations = interpolate_subject_vars(notification)
-        send_email(notification, subject_interpolations) if notif_type_config.wants_email?
+        subject_interpolations = interpolate_vars(@subject_vars, notification)
+        locals_interpolations = interpolate_vars(@locals, notification)
+
+        send_email(notification, subject_interpolations, locals_interpolations) if notif_type_config.wants_email?
       end
     end
 
     private
-      def send_email(notification, subject_interpolations)
+      def send_email(notification, subject_interpolations, locals_interpolations)
         deliver_method = "deliver_#{@deliver_when || Wupee.deliver_when}"
-        Wupee.mailer.send_mail_for(notification, subject_interpolations).send(deliver_method)
+        Wupee.mailer.send_mail_for(notification, subject_interpolations, locals_interpolations).send(deliver_method)
       end
 
-      def interpolate_subject_vars(notification)
-        subject_vars_interpolated = {}
-        @subject_vars.each do |key, value|
-          subject_vars_interpolated[key] = if value.kind_of?(Proc)
+      def interpolate_vars(vars, notification)
+        vars_interpolated = {}
+        vars.each do |key, value|
+          vars_interpolated[key] = if value.kind_of?(Proc)
             notification.instance_eval(&value)
           else
             value.to_s
           end
         end
 
-        subject_vars_interpolated
+        vars_interpolated
       end
   end
 end

@@ -2,11 +2,12 @@ module Wupee
   class NotificationsMailer < ActionMailer::Base
     after_action :mark_notification_as_sent
 
-    def send_mail_for(notification, subject_interpolations = {})
+    def send_mail_for(notification, subject_interpolations = {}, locals_interpolations = {})
       @notification = notification
       @receiver = notification.receiver
       @attached_object = notification.attached_object
       @subject_interpolations = subject_interpolations
+      @locals = locals_interpolations
 
       if !respond_to?(notification.notification_type.name)
         class_eval %Q{
