@@ -5,8 +5,8 @@ module Wupee
     def initialize(opts = {})
       @attached_object = opts[:attached_object]
 
-      receiver_arg = opts[:receiver] || opts[:receivers] || []
-      receiver(receiver_arg)
+      receiver_arg = opts[:receiver] || opts[:receivers]
+      receiver([*receiver_arg]) if receiver_arg
 
       @subject_vars = opts[:subject_vars] || {}
       @locals = opts[:locals] || {}
@@ -28,11 +28,11 @@ module Wupee
     end
 
     def receiver(receiver)
-      @receiver_s = [*receiver]
+      @receiver_s = receiver
     end
 
     def receivers(receivers)
-      @receiver_s = [*receivers]
+      @receiver_s = receivers
     end
 
     def deliver(deliver_method)
@@ -48,7 +48,7 @@ module Wupee
     end
 
     def execute
-      raise ArgumentError.new('receiver or receivers is missing') if @receiver_s.empty?
+      raise ArgumentError.new('receiver or receivers is missing') if @receiver_s.nil?
       raise ArgumentError.new('notif_type is missing') if @notification_type.nil?
 
       notif_type_configs = Wupee::NotificationTypeConfiguration.includes(:receiver).where(receiver: @receiver_s, notification_type: @notification_type)

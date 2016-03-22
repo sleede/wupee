@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_relative '../../lib/wupee/notifier'
 
 RSpec.describe Wupee::Notifier, type: :model do
   let!(:notif_type) { Wupee::NotificationType.create!(name: "notify_new_message") }
@@ -46,6 +47,10 @@ RSpec.describe Wupee::Notifier, type: :model do
   it "doesn't raise ArgumentError if receiver or receivers is present" do
     expect { Wupee::Notifier.new(notif_type: notif_type, receiver: user).execute }.not_to raise_error
     expect { Wupee::Notifier.new(notif_type: notif_type, receivers: user).execute }.not_to raise_error
+  end
+
+  it "doesn't raise ArgumentError if receivers is an empty array" do
+    expect { Wupee::Notifier.new(notif_type: notif_type, receivers: []).execute }.not_to raise_error
   end
 
   it "raises ArgumentError if notif_type is missing" do
