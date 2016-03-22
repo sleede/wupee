@@ -171,6 +171,16 @@ You can also use the method `notify` this way:
 
 The method will take care to check receiver's configurations to only send emails to those who want them.
 
+### Rake tasks
+
+#### generate Wupee::NotificationTypeConfiguration objects for given Wupee::NotificationType name and for all receivers of given class (default to User)
+
+Example for a Wupee::NotificationType named 'user_destroyed':
+```bash
+rake 'wupee:generate_notification_type_configurations[user_destroyed]' # for User class
+rake 'wupee:generate_notification_type_configurations[user_destroyed,Admin]' # for Admin class
+```
+
 ## Wupee::Api::NotificationsController
 
 In order to make this controller work, you need a method `current_user` which return the user currently signed in.
