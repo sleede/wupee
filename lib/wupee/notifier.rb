@@ -6,7 +6,7 @@ module Wupee
       @attached_object = opts[:attached_object]
 
       receiver_arg = opts[:receiver] || opts[:receivers]
-      receiver([*receiver_arg]) if receiver_arg
+      receiver(receiver_arg) if receiver_arg
 
       @subject_vars = opts[:subject_vars] || {}
       @locals = opts[:locals] || {}
@@ -28,11 +28,11 @@ module Wupee
     end
 
     def receiver(receiver)
-      @receiver_s = receiver
+      @receiver_s = [*receiver]
     end
 
     def receivers(receivers)
-      @receiver_s = receivers
+      receiver(receivers)
     end
 
     def deliver(deliver_method)
