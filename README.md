@@ -49,11 +49,9 @@ Running the generator will do a few things:
   # config/initializers/wupee.rb
   Wupee.mailer = NotificationsMailer # the class of the mailer you will use to send the emails
   Wupee.deliver_when = :now # use :later if you already configured a queuing system
-
-  Wupee::NotificationType.class_eval do
-    create_configurations_for 'User' # class name of your notification receivers, can be various 'User', 'Admin',
-  end                                # enable callbacks to create Wupee::NotificationTypeConfiguration object of
-  # each user when you create a new Wupee::NotificationType
+  Wupee.receivers = 'User' # class name of your notification receivers
+            # enable callbacks to create Wupee::NotificationTypeConfiguration object of
+            # each user when you create a new Wupee::NotificationType
   ```
 3. create a mailer `NotificationsMailer` which inheritates from `Wupee::NotificationsMailer`
 

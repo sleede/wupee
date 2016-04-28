@@ -30,6 +30,12 @@ RSpec.describe Wupee::NotificationType, type: :model do
     end
   end
 
+  context "class methods" do
+    it "has a method create_configurations_for which creates NotificationTypeConfiguration objects" do
+      expect { create :notification_type, name: "random_notif_type_2" }.to change { Wupee::NotificationTypeConfiguration.count }.by(User.count)
+    end
+  end
+
   context "associations" do
     it "destroys notification_type_configurations on destroy" do
       expect { notification_type.destroy! }.to change { Wupee::Notification.count }.by(-1)
