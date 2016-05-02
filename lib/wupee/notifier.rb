@@ -63,7 +63,7 @@ module Wupee
         notification = Wupee::Notification.new(
           receiver: notif_type_config.receiver,
           notification_type: @notification_type, 
-          attached_object: @attached_object
+          attached_object: @attached_object,
           actor: @actor
         )
 
