@@ -3,6 +3,7 @@ class CreateWupeeNotifications < ActiveRecord::Migration
     create_table :wupee_notifications do |t|
       t.references :receiver, polymorphic: true
       t.references :attached_object, polymorphic: true
+      t.references :actor, polymorphic: true
       t.belongs_to :notification_type
       t.integer :notification_type_id
       t.boolean :is_read, default: false
