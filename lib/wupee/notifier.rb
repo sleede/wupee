@@ -1,6 +1,6 @@
 module Wupee
   class Notifier
-    attr_reader :deliver_when, :attached_object, :receiver_s, :notification_type, :subject_vars, :locals
+    attr_reader :deliver_when, :attached_object, :receiver_s, :notification_type, :subject_vars, :locals, :headers
 
     def initialize(opts = {})
       @attached_object = opts[:attached_object]
@@ -11,8 +11,14 @@ module Wupee
       @subject_vars = opts[:subject_vars] || {}
       @locals = opts[:locals] || {}
 
+      @headers = opts[:headers] || {}
+
       @deliver_when = opts[:deliver]
       notif_type(opts[:notif_type]) if opts[:notif_type]
+    end
+
+    def headers(headers = {})
+      @headers = headers
     end
 
     def notif_type(notif_type)
@@ -68,7 +74,7 @@ module Wupee
     private
       def send_email(notification, subject_interpolations, locals_interpolations)
         deliver_method = "deliver_#{@deliver_when || Wupee.deliver_when}"
-        Wupee.mailer.send_mail_for(notification, subject_interpolations, locals_interpolations).send(deliver_method)
+        Wupee.mailer.send_mail_for(notification, subject_interpolations, locals_interpolations, @headers).send(deliver_method)
       end
 
       def interpolate_vars(vars, notification)
