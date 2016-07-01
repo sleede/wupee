@@ -77,7 +77,7 @@ module Wupee
           vars_interpolated[key] = if value.kind_of?(Proc)
             notification.instance_eval(&value)
           else
-            value.to_s
+            value
           end
         end
 
