@@ -1,6 +1,6 @@
 module Wupee
   class Notifier
-    attr_reader :deliver_when, :attached_object, :receiver_s, :notification_type, :subject_vars, :locals, :headers
+    attr_reader :deliver_when, :attached_object, :receiver_s, :notification_type, :subject_vars, :locals, :headers, :config_scope
 
     def initialize(opts = {})
       @attached_object = opts[:attached_object]
@@ -12,6 +12,8 @@ module Wupee
       @locals = opts[:locals] || {}
 
       @headers = opts[:headers] || {}
+
+      @config_scope = opts[:config_scope]
 
       @deliver_when = opts[:deliver]
       notif_type(opts[:notif_type]) if opts[:notif_type]
@@ -53,11 +55,27 @@ module Wupee
       @locals = locals
     end
 
+    def config_scope(config_scope = nil)
+      @config_scope = config_scope
+    end
+
     def execute
       raise ArgumentError.new('receiver or receivers is missing') if @receiver_s.nil?
       raise ArgumentError.new('notif_type is missing') if @notification_type.nil?
 
       notif_type_configs = Wupee::NotificationTypeConfiguration.includes(:receiver).where(receiver: @receiver_s, notification_type: @notification_type)
+
+      if @config_scope
+        notif_type_configs = if @config_scope.respond_to?(:call)
+          notif_type_configs.scoping { Wupee::NotificationTypeConfiguration.instance_exec(&@config_scope) }
+        elsif @config_scope.kind_of?(Hash)
+          notif_type_configs.where(@config_scope)
+        elsif @config_scope.is_a?(String) or @config_scope.is_a?(Symbol)
+          notif_type_configs.send(@config_scope)
+        else
+          raise ArgumentError.new('config_scope have to be callable, Hash, String or Symbol')
+        end
+      end
 
       notif_type_configs.each do |notif_type_config|
         notification = Wupee::Notification.new(receiver: notif_type_config.receiver, notification_type: @notification_type, attached_object: @attached_object)
