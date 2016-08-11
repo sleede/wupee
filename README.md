@@ -1,7 +1,7 @@
 # Wupee
 
 Wupee is a simple gem which tries to fill the gap of lacking gems to manage **notifications** in Rails app.
-Wupee is a opinionated solution which assumes that users needs to:
+Wupee is an opinionated solution which assumes that users needs to:
 
 * be able to receive notifications in the app
 * be able to receive notifications by email
