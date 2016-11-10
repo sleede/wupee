@@ -14,8 +14,7 @@ module Wupee
           def #{notification.notification_type.name}
             mail to: @receiver.email,
                  subject: t('wupee.email_subjects.#{notification.notification_type.name}', @subject_interpolations),
-                 template_name: '#{notification.notification_type.name}',
-                 content_type: 'text/html'
+                 template_name: '#{notification.notification_type.name}'
           end
         }
       end

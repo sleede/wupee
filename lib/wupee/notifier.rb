@@ -1,9 +1,11 @@
 module Wupee
   class Notifier
-    attr_reader :deliver_when, :attached_object, :receiver_s, :notification_type, :subject_vars, :locals
+    attr_reader :deliver_when, :attached_object, :receiver_s, 
+    :notification_type, :subject_vars, :locals, :actor
 
     def initialize(opts = {})
       @attached_object = opts[:attached_object]
+      @actor = opts[:actor]
 
       receiver_arg = opts[:receiver] || opts[:receivers]
       receiver(receiver_arg) if receiver_arg
@@ -35,6 +37,10 @@ module Wupee
       receiver(receivers)
     end
 
+    def actor(actor)
+      @actor = actor
+    end
+
     def deliver(deliver_method)
       @deliver_when = deliver_method
     end
@@ -54,7 +60,13 @@ module Wupee
       notif_type_configs = Wupee::NotificationTypeConfiguration.includes(:receiver).where(receiver: @receiver_s, notification_type: @notification_type)
 
       notif_type_configs.each do |notif_type_config|
-        notification = Wupee::Notification.new(receiver: notif_type_config.receiver, notification_type: @notification_type, attached_object: @attached_object)
+        notification = Wupee::Notification.new(
+          receiver: notif_type_config.receiver,
+          notification_type: @notification_type, 
+          attached_object: @attached_object,
+          actor: @actor
+        )
+
         notification.is_read = true unless notif_type_config.wants_notification?
         notification.save!
 
