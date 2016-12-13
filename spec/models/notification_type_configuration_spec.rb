@@ -18,6 +18,7 @@ RSpec.describe Wupee::NotificationTypeConfiguration, type: :model do
     end
 
     it "validates uniqueness of [receiver, notification_type]" do
+      Wupee::NotificationTypeConfiguration.create(receiver: receiver, notification_type: notification_type)
       notification_type_conf_same = Wupee::NotificationTypeConfiguration.create(receiver: receiver, notification_type: notification_type)
       expect(notification_type_conf_same).to be_invalid
     end
