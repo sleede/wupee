@@ -29,12 +29,15 @@ RSpec.describe Wupee::Notifier, type: :model do
     user_3 = create :user
     user_4 = create :user
 
+
+    user_1.notification_type_configurations.destroy_all
     Wupee::NotificationTypeConfiguration.find_by(receiver: user_2, notification_type: notif_type).update(value: :nothing)
     Wupee::NotificationTypeConfiguration.find_by(receiver: user_3, notification_type: notif_type).update(value: :email)
     Wupee::NotificationTypeConfiguration.find_by(receiver: user_4, notification_type: notif_type).update(value: :notification)
 
     wupee_notifier = Wupee::Notifier.new(receivers: [user_1, user_2, user_3, user_4], notif_type: notif_type)
 
+    expect { wupee_notifier.execute }.to change { Wupee::NotificationTypeConfiguration.count }.by(1)
     expect { wupee_notifier.execute }.to change { ActionMailer::Base.deliveries.size }.by(2)
     expect { wupee_notifier.execute }.to change { Wupee::Notification.where(is_read: true).count }.by(2)
     expect { wupee_notifier.execute }.to change { Wupee::Notification.count }.by(4)

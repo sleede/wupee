@@ -51,6 +51,8 @@ module Wupee
       raise ArgumentError.new('receiver or receivers is missing') if @receiver_s.nil?
       raise ArgumentError.new('notif_type is missing') if @notification_type.nil?
 
+      create_necessary_configurations
+
       notif_type_configs = Wupee::NotificationTypeConfiguration.includes(:receiver).where(receiver: @receiver_s, notification_type: @notification_type)
 
       notif_type_configs.each do |notif_type_config|
@@ -62,6 +64,12 @@ module Wupee
         locals_interpolations = interpolate_vars(@locals, notification)
 
         send_email(notification, subject_interpolations, locals_interpolations) if notif_type_config.wants_email?
+      end
+    end
+
+    def create_necessary_configurations
+      @receiver_s.each do |receiver|
+        Wupee::NotificationTypeConfiguration.find_or_create_by! receiver: receiver, notification_type: @notification_type
       end
     end
 
