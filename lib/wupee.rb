@@ -13,6 +13,5 @@ module Wupee
 
   def self.receivers=(klass)
     @@receivers = klass
-    Wupee::NotificationType.create_configurations_for(klass)
   end
 end
