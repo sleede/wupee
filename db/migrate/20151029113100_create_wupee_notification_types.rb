@@ -1,4 +1,4 @@
-class CreateWupeeNotificationTypes < ActiveRecord::Migration
+class CreateWupeeNotificationTypes < ActiveRecord::Migration[5.0]
   def change
     create_table :wupee_notification_types do |t|
       t.string :name
