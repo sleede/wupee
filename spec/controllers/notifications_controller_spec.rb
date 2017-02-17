@@ -29,6 +29,11 @@ RSpec.describe Wupee::Api::NotificationsController, type: :controller do
       expect(json[0]['id']).to eq notification.id
       expect(json[0]['message']['subject']).to eq "subject"
     end
+
+    it "should accept scopes as param" do
+      get :index, format: :json, scopes: "unwanted"
+      expect(json.size).to eq 0  
+    end
   end
 
   describe 'GET show json' do
@@ -45,7 +50,7 @@ RSpec.describe Wupee::Api::NotificationsController, type: :controller do
     render_views
 
     it "should mark as read" do
-      put :update, id: notification.id, format: :json
+      patch :mark_as_read, id: notification.id, format: :json
       expect(json['is_read']).to eq true
     end
   end
@@ -54,7 +59,7 @@ RSpec.describe Wupee::Api::NotificationsController, type: :controller do
     render_views
 
     it "should all notification of user mark as read" do
-      put :update_all, format: :json
+      patch :mark_all_as_read, format: :json
       expect(notification.reload.is_read).to eq true
     end
   end

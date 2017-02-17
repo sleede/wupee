@@ -1,4 +1,4 @@
-class CreateWupeeNotifications < ActiveRecord::Migration[5.0]
+class CreateWupeeNotifications < ActiveRecord::Migration
   def change
     create_table :wupee_notifications do |t|
       t.references :receiver, polymorphic: true, index: { name: 'idx_wupee_notifications_on_receiver_id' }
@@ -6,6 +6,7 @@ class CreateWupeeNotifications < ActiveRecord::Migration[5.0]
       t.integer :notification_type_id
       t.boolean :is_read, default: false
       t.boolean :is_sent, default: false
+      t.boolean :is_wanted, default: true
 
       t.timestamps null: false
     end

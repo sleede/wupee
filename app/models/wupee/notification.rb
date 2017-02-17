@@ -3,10 +3,13 @@ class Wupee::Notification < ActiveRecord::Base
   belongs_to :attached_object, polymorphic: true
   belongs_to :notification_type, class_name: "Wupee::NotificationType"
 
-  validates_presence_of :receiver,
-                        :notification_type
+  validates :receiver, presence: true
+  validates :notification_type, presence: true
 
+  scope :read, -> { where(is_read: true) }
   scope :unread, -> { where(is_read: false) }
+  scope :wanted, -> { where(is_wanted: true) }
+  scope :unwanted, -> { where(is_wanted: false) }
   scope :ordered, -> { order(created_at: :desc) }
 
   def mark_as_read

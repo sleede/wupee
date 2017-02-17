@@ -1,33 +1,34 @@
 module Wupee
   class Api::NotificationsController < ApplicationController
-    before_action :set_notification, only: [:show, :update]
-
     def index
-      if params[:is_read]
-        @notifications = current_user.notifications.where(is_read: params[:is_read] == "true")
-      else
-        @notifications = current_user.notifications
+      scopes = params[:scopes].present? ? params[:scopes].split(',') : []
+      scopes = ['read', 'unread', 'wanted', 'unwanted', 'ordered'] & scopes
+      
+      @notifications = current_user.notifications
+
+      scopes.each do |scope|
+        @notifications = @notifications.public_send(scope)
       end
     end
 
     def show
+      @notification = find_notification
     end
 
-    def update
+    def mark_as_read
+      @notification = find_notification
       @notification.mark_as_read
       render :show
     end
 
-    def update_all
-      current_user.notifications.where(is_read: false).find_each do |n|
-        n.mark_as_read
-      end
+    def mark_all_as_read
+      current_user.notifications.unread.update_all(is_read: true)
       head :no_content
     end
 
     private
-    def set_notification
-      @notification = current_user.notifications.find(params[:id])
-    end
+      def find_notification
+        current_user.notifications.find(params[:id])
+      end
   end
 end
