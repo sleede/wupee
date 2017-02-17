@@ -77,16 +77,22 @@ module Wupee
         end
       end
 
+      notifications = []
+
       notif_type_configs.each do |notif_type_config|
         notification = Wupee::Notification.new(receiver: notif_type_config.receiver, notification_type: @notification_type, attached_object: @attached_object)
         notification.is_read = true unless notif_type_config.wants_notification?
         notification.save!
+
+        notifications << notification
 
         subject_interpolations = interpolate_vars(@subject_vars, notification)
         locals_interpolations = interpolate_vars(@locals, notification)
 
         send_email(notification, subject_interpolations, locals_interpolations) if notif_type_config.wants_email?
       end
+
+      notifications
     end
 
     private
