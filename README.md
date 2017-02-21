@@ -1,6 +1,7 @@
 # Breaking changes
 
 After using this gem in a few projects, I realized that all projects have different needs concerning the configuration of notifications (whether or not the user should received a notification or an email). We have apps which doesn't have the need for configuration so we are having a lots of Wupee::NotificationTypeConfiguration created and fetched from db for nothing. I really feel that the app should be responsible for addressing this. 
+Also, in some apps, I had to reopen classes to override default behaviour of the gem or skip callbacks and adding others and I was feeling that something was wrong. See [this issue](https://github.com/sleede/wupee/issues/7) for another example.
 Therefore, this branch removes all Wupee::NotificationTypeConfiguration but leaves a door open to customization, see [Wupee initializer](#initializer).
 
 
