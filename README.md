@@ -1,3 +1,10 @@
+# Breaking changes
+
+After using this gem in a few projects, I realized that all projects have different needs concerning the configuration of notifications (whether or not the user should received a notification or an email). We have apps which doesn't have the need for configuration so we are having a lots of Wupee::NotificationTypeConfiguration created and fetched from db for nothing. I really feel that the app should be responsible for addressing this. 
+Also, in some apps, I had to reopen classes to override default behaviour of the gem or skip callbacks and adding others and I was feeling that something was wrong. See [this issue](https://github.com/sleede/wupee/issues/7) for another example.
+Therefore, this branch removes all Wupee::NotificationTypeConfiguration but leaves a door open to customization, see [Wupee initializer](#initializer).
+
+
 # Wupee
 
 Wupee is a simple gem which tries to fill the gap of lacking gems to manage **notifications** in Rails app.
@@ -5,8 +12,6 @@ Wupee is an opinionated solution which assumes that users needs to:
 
 * be able to receive notifications in the app
 * be able to receive notifications by email
-* be able to configure if they wants to either receive emails AND notifications or emails or only notifications or nothing
-
 
 The main object of the solution is the `Wupee::Notification` which stores:
 * receiver (polymorphic): the recipient of the message
@@ -43,15 +48,24 @@ Running the generator will do a few things:
   # config/routes.rb
   mount Wupee::Engine, at: "/wupee"
   ```
-2. create wupee initializer:
+2. create <a name="initializer">wupee initializer</a>:
 
   ```ruby
   # config/initializers/wupee.rb
   Wupee.mailer = NotificationsMailer # the class of the mailer you will use to send the emails
   Wupee.deliver_when = :now # use :later if you already configured a queuing system
-  Wupee.receivers = 'User' # class name of your notification receivers
-            # enable callbacks to create Wupee::NotificationTypeConfiguration object of
-            # each user when you create a new Wupee::NotificationType
+ 
+  # uncomment and implement your logic here to avoid/permit email sending to your users
+  # leave it commented if you always want your users received emails
+  # Wupee.email_sending_rule = Proc.new do |receiver, notification_type| 
+  #   # logic goes here, returning a boolean
+  # end
+
+  # uncomment and implement your logic here to avoid/permit email sending to your users
+  # leave it commented if you always want your users received notifications
+  # Wupee.notification_sending_rule = Proc.new do |receiver, notification_type| 
+  #   # logic goes here, returning a boolean
+  # end
   ```
 3. create a mailer `NotificationsMailer` which inheritates from `Wupee::NotificationsMailer`
 
@@ -115,20 +129,6 @@ Will execute a few things:
  For example, if your mailer is named `NotificationsMailer`, your template will take place in
  `app/views/notifications_mailer/user_has_been_created.html.erb`
 
-### Understand the Wupee::NotificationTypeConfiguration model
-
-An object of the class `Wupee::NotificationTypeConfiguration` references/stores:
-* receiver (polymorphic)
-* notification_type (object of class `Wupee::NotificationType`)
-* value (an enum)
-
-The attribute **value** can be:
-* 'both' : the receiver wants notifications **AND** emails of the `Wupee::NotificationType` type (default value)
-* 'nothing' : the receiver doesn't want to receive **nothing** from the `Wupee::NotificationType` type
-* 'email' : the receiver wants to receive **only** emails
-* 'notification' : the receiver wants to receive **only** notifications
-
-Just let the user edit this object to make him able to activate/deactivate notifications or emails.
 
 ### Use the concerns
 
@@ -136,9 +136,7 @@ Just let the user edit this object to make him able to activate/deactivate notif
 
 Including the concern `Wupee::Receiver` in your receiver class (probably the `User` class) permits a few things:
  * get notifications of a user: `@user.notifications`
- * get notifications_type_configurations of a user: `@user.notifications_type_configurations`
- * execute an after_create callback to create `Wupee::NotificationTypeConfiguration` for each `Wupee::NotificationType` object for the receiver
- * destroy `Wupee::Notification` and `Wupee::NotificationTypeConfiguration` associated to the receiver from db if it is destroyed
+ * destroy `Wupee::Notification` associated to the receiver from db if it is destroyed
 
 #### Wupee::AttachedObject
 
@@ -167,18 +165,6 @@ You can also use the method `notify` this way:
  Wupee.notify attached_object: @the_new_user, notif_type: :user_has_been_created, subject_vars: { user_full_name: Proc.new { |notification| notification.attached_object.full_name } }, locals: { extra_data: "Yeahhhhh" }, receivers: User.admin
 ```
 
-The method will take care to check receiver's configurations to only send emails to those who want them.
-
-### Rake tasks
-
-#### generate Wupee::NotificationTypeConfiguration objects for given Wupee::NotificationType name and for all receivers of given class (default to User)
-
-Example for a Wupee::NotificationType named 'user_destroyed':
-```bash
-rake 'wupee:generate_notification_type_configurations[user_destroyed]' # for User class
-rake 'wupee:generate_notification_type_configurations[user_destroyed,Admin]' # for Admin class
-```
-
 ## Wupee::Api::NotificationsController
 
 In order to make this controller work, you need a method `current_user` which return the user currently signed in.
@@ -186,18 +172,8 @@ In order to make this controller work, you need a method `current_user` which re
 The controller have various actions all scoped for the current user:
  * `wupee/api/notifications#index` : fetch notifications, take an optional parameter `is_read` (false by default)
  * `wupee/api/notifications#show` : fetch a notification
- * `wupee/api/notifications#update` : mark as read a notification
- * `wupee/api/notifications#update_all` : mark as read all notifications
-
-## Wupee::NotificationTypeConfiguration
-
-The class also define 2 methods which you could use (in your views for example):
- * `wants_email?` : return a boolean
- * `wants_notification?` : return a boolean
-
-## Important to know!
-
-The system relies on the fact that you have an object in db for each couple of [receiver, `Wupee::NotificationType`]. Even if the gem provides callbacks to take care of that, be sure that those objects are created otherwise notifications won't be sent for thoses receivers.
+ * `wupee/api/notifications#mark_as_read` : mark as read a notification
+ * `wupee/api/notifications#mark_all_as_read` : mark as read all notifications
 
 ## Why WUPEE ?
 
