@@ -167,13 +167,14 @@ You can also use the method `notify` this way:
 
 ## Wupee::Api::NotificationsController
 
-In order to make this controller work, you need a method `current_user` which return the user currently signed in.
-
 The controller have various actions all scoped for the current user:
  * `wupee/api/notifications#index` : fetch notifications, take an optional parameter `is_read` (false by default)
  * `wupee/api/notifications#show` : fetch a notification
  * `wupee/api/notifications#mark_as_read` : mark as read a notification
  * `wupee/api/notifications#mark_all_as_read` : mark as read all notifications
+
+To use this controller, define a controller inheriting from `Wupee::Api::NotificationsController`, set the routes in your `config/routes.rb` 
+and define a method `current_user`  which returns the user signed in.
 
 ## Why WUPEE ?
 
