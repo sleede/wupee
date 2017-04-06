@@ -1,18 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe Wupee::Api::NotificationsController, type: :controller do
-  routes { Wupee::Engine.routes }
+RSpec.describe NotificationsController, type: :controller do
   let(:notification) { create :notification }
 
-  before :all do
-    Wupee::Api::NotificationsController.class_eval do
-      def current_user
-      end
-    end
-  end
-
   before :each do
-    allow_any_instance_of(Wupee::Api::NotificationsController).to receive(:current_user).and_return(notification.receiver)
+    allow_any_instance_of(NotificationsController).to receive(:current_user).and_return(notification.receiver)
   end
 
   it 'should get current user' do

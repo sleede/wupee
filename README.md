@@ -42,13 +42,7 @@ $ rake db:migrate
 
 Running the generator will do a few things:
 
-1. add the engine routes to your routes.rb:
-
-  ```ruby
-  # config/routes.rb
-  mount Wupee::Engine, at: "/wupee"
-  ```
-2. create <a name="initializer">wupee initializer</a>:
+1. create <a name="initializer">wupee initializer</a>:
 
   ```ruby
   # config/initializers/wupee.rb
@@ -67,7 +61,7 @@ Running the generator will do a few things:
   #   # logic goes here, returning a boolean
   # end
   ```
-3. create a mailer `NotificationsMailer` which inheritates from `Wupee::NotificationsMailer`
+2. create a mailer `NotificationsMailer` which inheritates from `Wupee::NotificationsMailer`
 
   ```ruby
   # app/mailers/notifications_mailer.rb
@@ -77,7 +71,7 @@ Running the generator will do a few things:
  end
   ```
 
-4. adds wupee to your locale yml file (for email subjects)
+3. adds wupee to your locale yml file (for email subjects)
   ```yml
   # config/locales/en.yml
   en:
@@ -168,13 +162,29 @@ You can also use the method `notify` this way:
 ## Wupee::Api::NotificationsController
 
 The controller have various actions all scoped for the current user:
- * `wupee/api/notifications#index` : fetch notifications, take an optional parameter `is_read` (false by default)
+ * `wupee/api/notifications#index` : fetch notifications, takes an optional parameter `scopes` (example: scopes=read,ordered)
  * `wupee/api/notifications#show` : fetch a notification
- * `wupee/api/notifications#mark_as_read` : mark as read a notification
- * `wupee/api/notifications#mark_all_as_read` : mark as read all notifications
+ * `wupee/api/notifications#mark_as_read` : mark a notification as read 
+ * `wupee/api/notifications#mark_all_as_read` : mark all notifications as read
 
 To use this controller, define a controller inheriting from `Wupee::Api::NotificationsController`, set the routes in your `config/routes.rb` 
 and define a method `current_user`  which returns the user signed in.
+
+Example:
+```ruby
+  # config/routes.rb
+  namespace :api, defaults: { format: :json } do
+    resources :notifications, only: [:index, :show] do
+      patch :mark_as_read, on: :member
+      patch :mark_all_as_read, on: :collection
+    end
+  end
+
+  # app/controllers/api/notifications_controller.rb
+  class Api::NotificationsController < Wupee::Api::NotificationsController 
+    before_action :authenticate_user! # if you are using devise
+  end
+```
 
 ## Why WUPEE ?
 
