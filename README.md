@@ -162,7 +162,7 @@ You can also use the method `notify` this way:
 ## Wupee::Api::NotificationsController
 
 The controller have various actions all scoped for the current user:
- * `wupee/api/notifications#index` : fetch notifications, takes an optional parameter `scopes` (example: scopes=read,ordered)
+ * `wupee/api/notifications#index` : fetch notifications, takes an optional get parameter `scopes` (example: scopes=read,ordered)
  * `wupee/api/notifications#show` : fetch a notification
  * `wupee/api/notifications#mark_as_read` : mark a notification as read 
  * `wupee/api/notifications#mark_all_as_read` : mark all notifications as read
