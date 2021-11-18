@@ -36,4 +36,19 @@ RSpec.describe Wupee::Notification, type: :model do
     it { expect(create(:notification).is_read).to be false }
     it { expect(create(:notification).is_sent).to be false }
   end
+
+  # it '#deliver_now should send a mail' do
+  #   notification = Wupee::Notification.new.send_notification(type: notification_type_name, attached_object: message)
+  #                                  .to(receiver)
+  #   expect(notification.deliver_now).to be_a(Mail::Message)
+  # end
+  #
+  # it '#deliver_later should send later a mail' do
+  #   notification = Wupee::Notification.new.send_notification(type: notification_type_name, attached_object: message)
+  #                                  .to(receiver)
+  #   expect(notification.deliver_later).to be_a(ActionMailer::DeliveryJob)
+  # end
+  #
+
+
 end

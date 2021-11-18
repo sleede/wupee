@@ -55,27 +55,38 @@ module Wupee
       @locals = locals
     end
 
+    def config_scope(config_scope = nil)
+      @config_scope = config_scope
+    end
+
     def execute
       raise ArgumentError.new('receiver or receivers is missing') if @receiver_s.nil?
       raise ArgumentError.new('notif_type is missing') if @notification_type.nil?
 
-      notifications = []
-      @receiver_s.each do |receiver|
-        notification = Wupee::Notification.new(receiver: receiver, notification_type: @notification_type, attached_object: @attached_object)
-        
-        notification.is_wanted = false unless send_notification?(receiver, @notification_type)
+      notif_type_configs = Wupee::NotificationTypeConfiguration.includes(:receiver).where(receiver: @receiver_s, notification_type: @notification_type)
 
+      if @config_scope
+        notif_type_configs = if @config_scope.respond_to?(:call)
+          notif_type_configs.scoping { Wupee::NotificationTypeConfiguration.instance_exec(&@config_scope) }
+        elsif @config_scope.kind_of?(Hash)
+          notif_type_configs.where(@config_scope)
+        elsif @config_scope.is_a?(String) or @config_scope.is_a?(Symbol)
+          notif_type_configs.send(@config_scope)
+        else
+          raise ArgumentError.new('config_scope have to be callable, Hash, String or Symbol')
+        end
+      end
+
+      notif_type_configs.each do |notif_type_config|
+        notification = Wupee::Notification.new(receiver: notif_type_config.receiver, notification_type: @notification_type, attached_object: @attached_object)
+        notification.is_read = true unless notif_type_config.wants_notification?
         notification.save!
-
-        notifications << notification
 
         subject_interpolations = interpolate_vars(@subject_vars, notification)
         locals_interpolations = interpolate_vars(@locals, notification)
 
-        send_email(notification, subject_interpolations, locals_interpolations) if send_email?(receiver, @notification_type)
+        send_email(notification, subject_interpolations, locals_interpolations) if notif_type_config.wants_email?
       end
-
-      notifications
     end
 
     private
@@ -95,30 +106,6 @@ module Wupee
         end
 
         vars_interpolated
-      end
-
-      def send_notification?(receiver, notification_type)
-        if !Wupee.notification_sending_rule.nil?
-          if Wupee.notification_sending_rule.is_a?(Proc)  
-            Wupee.notification_sending_rule.call(receiver, notification_type)
-          else
-            Wupee.notification_sending_rule
-          end
-        else
-          true
-        end
-      end
-
-      def send_email?(receiver, notification_type)
-        if !Wupee.email_sending_rule.nil?
-          if Wupee.email_sending_rule.is_a?(Proc)  
-            Wupee.email_sending_rule.call(receiver, notification_type)
-          else
-            Wupee.email_sending_rule
-          end
-        else
-          true
-        end
       end
   end
 end

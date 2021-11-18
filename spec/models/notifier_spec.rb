@@ -23,26 +23,22 @@ RSpec.describe Wupee::Notifier, type: :model do
     expect(wupee_notifier.notification_type).to eq notif_type
   end
 
-  it "has a method execute to send notifications and mails" do
+  it "has a method execute to send notifications and mails depending on notification_type_configurations of the users" do
     user_1 = create :user
     user_2 = create :user
     user_3 = create :user
     user_4 = create :user
 
+    Wupee::NotificationTypeConfiguration.find_by(receiver: user_2, notification_type: notif_type).update(value: :nothing)
+    Wupee::NotificationTypeConfiguration.find_by(receiver: user_3, notification_type: notif_type).update(value: :email)
+    Wupee::NotificationTypeConfiguration.find_by(receiver: user_4, notification_type: notif_type).update(value: :notification)
+
     wupee_notifier = Wupee::Notifier.new(receivers: [user_1, user_2, user_3, user_4], notif_type: notif_type)
 
-    expect { wupee_notifier.execute }.to change { ActionMailer::Base.deliveries.size }.by(4)
-    expect { wupee_notifier.execute }.to change { Wupee::Notification.where(is_read: false).count }.by(4)
+    expect { wupee_notifier.execute }.to change { ActionMailer::Base.deliveries.size }.by(2)
+    expect { wupee_notifier.execute }.to change { Wupee::Notification.where(is_read: true).count }.by(2)
     expect { wupee_notifier.execute }.to change { Wupee::Notification.count }.by(4)
-
-    Wupee.email_sending_rule = false
-    expect { wupee_notifier.execute }.not_to change { ActionMailer::Base.deliveries.size }
-    expect { wupee_notifier.execute }.to change { Wupee::Notification.count }.by(4)
-    
-    Wupee.notification_sending_rule = false
-    expect { wupee_notifier.execute }.not_to change { Wupee::Notification.wanted.count }
-    expect { wupee_notifier.execute }.to change { Wupee::Notification.unwanted.count }.by(4)
-end
+  end
 
   it "raises ArgumentError if receiver or receivers is missing" do
     expect { Wupee::Notifier.new(notif_type: notif_type).execute }.to raise_error(ArgumentError)

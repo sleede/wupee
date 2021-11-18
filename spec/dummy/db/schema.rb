@@ -26,6 +26,18 @@ ActiveRecord::Schema.define(version: 20151029113107) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "wupee_notification_type_configurations", force: :cascade do |t|
+    t.integer  "notification_type_id"
+    t.integer  "receiver_id"
+    t.string   "receiver_type"
+    t.integer  "value",                default: 0
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  add_index "wupee_notification_type_configurations", ["notification_type_id"], name: "idx_wupee_notif_type_config_on_notification_type_id"
+  add_index "wupee_notification_type_configurations", ["receiver_type", "receiver_id"], name: "idx_wupee_notif_typ_config_on_receiver_type_and_receiver_id"
+
   create_table "wupee_notification_types", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -42,13 +54,8 @@ ActiveRecord::Schema.define(version: 20151029113107) do
     t.integer  "notification_type_id"
     t.boolean  "is_read",              default: false
     t.boolean  "is_sent",              default: false
-    t.boolean  "is_wanted",            default: true
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
   end
-
-  add_index "wupee_notifications", ["attached_object_type", "attached_object_id"], name: "idx_wupee_notifications_on_attached_object_id"
-  add_index "wupee_notifications", ["notification_type_id"], name: "idx_wupee_notifications_on_notification_type_id"
-  add_index "wupee_notifications", ["receiver_type", "receiver_id"], name: "idx_wupee_notifications_on_receiver_id"
 
 end

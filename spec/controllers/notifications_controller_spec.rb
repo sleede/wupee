@@ -1,10 +1,18 @@
 require 'rails_helper'
 
-RSpec.describe NotificationsController, type: :controller do
+RSpec.describe Wupee::Api::NotificationsController, type: :controller do
+  routes { Wupee::Engine.routes }
   let(:notification) { create :notification }
 
+  before :all do
+    Wupee::Api::NotificationsController.class_eval do
+      def current_user
+      end
+    end
+  end
+
   before :each do
-    allow_any_instance_of(NotificationsController).to receive(:current_user).and_return(notification.receiver)
+    allow_any_instance_of(Wupee::Api::NotificationsController).to receive(:current_user).and_return(notification.receiver)
   end
 
   it 'should get current user' do
@@ -20,11 +28,6 @@ RSpec.describe NotificationsController, type: :controller do
       expect(json.size).to eq 1
       expect(json[0]['id']).to eq notification.id
       expect(json[0]['message']['subject']).to eq "subject"
-    end
-
-    it "should accept scopes as param" do
-      get :index, format: :json, scopes: "unwanted"
-      expect(json.size).to eq 0  
     end
   end
 
@@ -42,7 +45,7 @@ RSpec.describe NotificationsController, type: :controller do
     render_views
 
     it "should mark as read" do
-      patch :mark_as_read, id: notification.id, format: :json
+      put :update, id: notification.id, format: :json
       expect(json['is_read']).to eq true
     end
   end
@@ -51,7 +54,7 @@ RSpec.describe NotificationsController, type: :controller do
     render_views
 
     it "should all notification of user mark as read" do
-      patch :mark_all_as_read, format: :json
+      put :update_all, format: :json
       expect(notification.reload.is_read).to eq true
     end
   end

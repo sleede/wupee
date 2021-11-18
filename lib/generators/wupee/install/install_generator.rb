@@ -5,6 +5,10 @@ class Wupee::InstallGenerator < Rails::Generators::Base
     template "notifications_mailer.rb", "app/mailers/notifications_mailer.rb"
   end
 
+  def add_wupee_routes
+    route 'mount Wupee::Engine, at: "/wupee"'
+  end
+
   def copy_initializer
     template "wupee.rb", "config/initializers/wupee.rb"
   end
