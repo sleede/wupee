@@ -9,7 +9,7 @@ class Wupee::NotificationType < ActiveRecord::Base
     receivers.each do |receiver|
       class_eval %Q{
         method_name = "create_configurations_for_#{receiver.to_s.underscore.pluralize}"
-        after_create method_name
+        after_create method_name.to_sym
 
         define_method method_name do
           receiver.to_s.constantize.pluck(:id).each do |receiver_id|
