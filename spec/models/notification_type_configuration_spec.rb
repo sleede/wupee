@@ -25,18 +25,18 @@ RSpec.describe Wupee::NotificationTypeConfiguration, type: :model do
 
   context "methods" do
     it "has method wants_email?" do
-      notification_type_conf = Wupee::NotificationTypeConfiguration.new(value: :both)
+      notification_type_conf = Wupee::NotificationTypeConfiguration.new(config_value: :both)
       expect(notification_type_conf.wants_email?).to eq true
 
-      notification_type_conf = Wupee::NotificationTypeConfiguration.new(value: :email)
+      notification_type_conf = Wupee::NotificationTypeConfiguration.new(config_value: :email)
       expect(notification_type_conf.wants_email?).to eq true
     end
 
     it "has method wants_notification?" do
-      notification_type_conf = Wupee::NotificationTypeConfiguration.new(value: :both)
+      notification_type_conf = Wupee::NotificationTypeConfiguration.new(config_value: :both)
       expect(notification_type_conf.wants_notification?).to eq true
 
-      notification_type_conf = Wupee::NotificationTypeConfiguration.new(value: :notification)
+      notification_type_conf = Wupee::NotificationTypeConfiguration.new(config_value: :notification)
       expect(notification_type_conf.wants_notification?).to eq true
     end
   end

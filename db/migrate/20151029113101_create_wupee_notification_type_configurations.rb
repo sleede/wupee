@@ -3,7 +3,7 @@ class CreateWupeeNotificationTypeConfigurations < ActiveRecord::Migration
     create_table :wupee_notification_type_configurations do |t|
       t.belongs_to :notification_type
       t.belongs_to :receiver, polymorphic: true
-      t.integer :value, default: 0
+      t.integer :config_value, default: 0
       t.timestamps null: false
     end
 

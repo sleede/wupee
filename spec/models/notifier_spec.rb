@@ -29,9 +29,9 @@ RSpec.describe Wupee::Notifier, type: :model do
     user_3 = create :user
     user_4 = create :user
 
-    Wupee::NotificationTypeConfiguration.find_by(receiver: user_2, notification_type: notif_type).update(value: :nothing)
-    Wupee::NotificationTypeConfiguration.find_by(receiver: user_3, notification_type: notif_type).update(value: :email)
-    Wupee::NotificationTypeConfiguration.find_by(receiver: user_4, notification_type: notif_type).update(value: :notification)
+    Wupee::NotificationTypeConfiguration.find_by(receiver: user_2, notification_type: notif_type).update(config_value: :nothing)
+    Wupee::NotificationTypeConfiguration.find_by(receiver: user_3, notification_type: notif_type).update(config_value: :email)
+    Wupee::NotificationTypeConfiguration.find_by(receiver: user_4, notification_type: notif_type).update(config_value: :notification)
 
     wupee_notifier = Wupee::Notifier.new(receivers: [user_1, user_2, user_3, user_4], notif_type: notif_type)
 
