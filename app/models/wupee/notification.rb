@@ -1,10 +1,7 @@
 class Wupee::Notification < ActiveRecord::Base
   belongs_to :receiver, polymorphic: true
-  belongs_to :attached_object, polymorphic: true
+  belongs_to :attached_object, polymorphic: true, optional: true
   belongs_to :notification_type, class_name: "Wupee::NotificationType"
-
-  validates_presence_of :receiver,
-                        :notification_type
 
   scope :unread, -> { where(is_read: false) }
   scope :ordered, -> { order(created_at: :desc) }
