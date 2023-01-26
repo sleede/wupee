@@ -20,6 +20,7 @@ module Wupee
               content_type: 'text/html'
             }
 
+            @headers[:delivery_method] = @headers[:delivery_method].to_sym if @headers.key?(:delivery_method)
             mail_args = mail_args.merge(@headers)
             mail mail_args
           end
